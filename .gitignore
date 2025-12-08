@@ -1,0 +1,116 @@
+###############################################################################
+# Flutter / Dart
+###############################################################################
+
+# Flutter/Dart specific
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+.history/
+
+# iOS
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/.generated/
+ios/Pods/
+ios/Podfile.lock
+ios/Runner.xcworkspace/
+
+# Android
+.android/
+gradle-wrapper.jar
+**/gradle-wrapper.jar
+android/.gradle/
+android/app/build/
+android/local.properties
+android/key.jks
+
+# Web
+web/.dart_tool/
+web/build/
+
+###############################################################################
+# Python / FastAPI
+###############################################################################
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Logs
+*.log
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+###############################################################################
+# OS / Editor / Misc
+###############################################################################
+
+# Mac / Windows
+.DS_Store
+Thumbs.db
+
+# Generated docs
+docs/_build/
+
+# Backup files
+*~
+*.swp
+*.swo
+*.tmp
+*.bak
