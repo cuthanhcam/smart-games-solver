@@ -1,0 +1,26 @@
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# Image Processing
+Pillow==10.2.0
+opencv-python==4.9.0.80
+numpy==1.26.3
+
+# Rubik's Cube Solver
+kociemba==1.2.1
+
+# ML/AI (optional - for advanced detection)
+# tensorflow==2.15.0
+# torch==2.1.2
+# torchvision==0.16.2
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+httpx==0.26.0
+
+# Utilities
+python-dotenv==1.0.0
