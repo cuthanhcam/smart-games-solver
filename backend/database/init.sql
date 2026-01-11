@@ -1,4 +1,4 @@
--- Database initialization script for Rubik Cube Game Platform
+-- Database initialization script for Smart Games Solver Platform
 -- PostgreSQL Schema
 
 -- Create users table

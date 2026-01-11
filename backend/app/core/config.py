@@ -1,22 +1,38 @@
+"""
+Application configuration
+"""
 from pydantic_settings import BaseSettings
-from typing import List
+from typing import List, Union
+from pydantic import field_validator
 
 
 class Settings(BaseSettings):
     # App Settings
-    PROJECT_NAME: str = "Rubik Cube Solver API"
-    VERSION: str = "1.0.0"
+    PROJECT_NAME: str = "Multi-Game Platform API"
+    VERSION: str = "2.0.0"
     DEBUG: bool = True
     HOST: str = "0.0.0.0"
     PORT: int = 8000
     
+    # Database
+    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/smart_game_db"
+    
+    # Security
+    SECRET_KEY: str = "your-secret-key-change-this-in-production-2024"
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
+    
     # CORS Settings
-    ALLOWED_ORIGINS: List[str] = [
-        "http://localhost:3000",
-        "http://localhost:8080",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:8080",
-    ]
+    ALLOWED_ORIGINS: Union[List[str], str] = ["*"]
+    
+    @field_validator('ALLOWED_ORIGINS', mode='before')
+    @classmethod
+    def parse_cors(cls, v):
+        if isinstance(v, str):
+            if v == "*":
+                return ["*"]
+            return [origin.strip() for origin in v.split(',')]
+        return v
     
     # Upload Settings
     MAX_UPLOAD_SIZE: int = 10 * 1024 * 1024  # 10MB
