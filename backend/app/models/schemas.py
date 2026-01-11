@@ -222,3 +222,113 @@ class UserActivityResponse(BaseModel):
 
 # Update forward references
 TokenResponse.model_rebuild()
+
+# ============= Friend Schemas =============
+class FriendshipResponse(BaseModel):
+    id: int
+    user_id: int
+    friend_id: int
+    status: str  # 'pending', 'accepted', 'rejected'
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class UserSearchResponse(BaseModel):
+    id: int
+    username: str
+    email: str
+    is_admin: bool
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class FriendListResponse(BaseModel):
+    id: int
+    username: str
+    email: str
+    friend_id: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class SendFriendRequestRequest(BaseModel):
+    receiver_id: int
+
+
+class AcceptFriendRequestRequest(BaseModel):
+    friendship_id: int
+
+
+class RejectFriendRequestRequest(BaseModel):
+    friendship_id: int
+
+
+class RemoveFriendRequest(BaseModel):
+    friend_id: int
+
+
+# ============= Message Schemas =============
+class SendMessageRequest(BaseModel):
+    receiver_id: int
+    content: str = Field(..., min_length=1, max_length=1000)
+
+
+class MessageResponse(BaseModel):
+    id: int
+    sender_id: int
+    receiver_id: int
+    content: str
+    is_read: bool
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class ChatListResponse(BaseModel):
+    user_id: int
+    username: str
+    email: str
+    last_message: Optional[str] = None
+    last_message_time: Optional[datetime] = None
+    is_read: bool = False
+    is_sent_by_me: bool = False
+    unread_count: int = 0
+
+
+class MarkMessageAsReadRequest(BaseModel):
+    message_id: int
+
+
+# ============= Announcement Schemas =============
+class CreateAnnouncementRequest(BaseModel):
+    title: str = Field(..., min_length=1, max_length=200)
+    content: str = Field(..., min_length=1)
+    type: str = Field(default='info', pattern="^(info|warning|success|error)$")
+
+
+class AnnouncementResponse(BaseModel):
+    id: int
+    admin_id: int
+    title: str
+    content: str
+    type: str
+    is_active: bool
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class UpdateAnnouncementRequest(BaseModel):
+    title: Optional[str] = None
+    content: Optional[str] = None
+    type: Optional[str] = None
+    is_active: Optional[bool] = None

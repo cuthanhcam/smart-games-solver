@@ -17,7 +17,7 @@ class CaroService:
     def __init__(self, db: Session):
         """Initialize service with database session"""
         self.db = db
-        self.game_score_repository = GameScoreRepository(db)
+        self.game_score_repository = GameScoreRepository()
     
     def create_new_game(
         self,

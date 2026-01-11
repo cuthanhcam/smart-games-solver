@@ -21,8 +21,8 @@ class SudokuService:
     def __init__(self, db: Session):
         """Initialize service with database session"""
         self.db = db
-        self.sudoku_repository = SudokuPuzzleRepository(db)
-        self.game_score_repository = GameScoreRepository(db)
+        self.sudoku_repository = SudokuPuzzleRepository()
+        self.game_score_repository = GameScoreRepository()
     
     def get_puzzle(
         self,

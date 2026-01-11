@@ -17,7 +17,7 @@ class RubikService:
     def __init__(self, db: Session):
         """Initialize service with database session"""
         self.db = db
-        self.rubik_repository = RubikSolutionRepository(db)
+        self.rubik_repository = RubikSolutionRepository()
     
     def validate_cube_state(self, cube_state: str) -> None:
         """
