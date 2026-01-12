@@ -633,42 +633,6 @@ class _AdminPageState extends State<AdminPage> {
                 color: Colors.white,
                 elevation: 8,
                 itemBuilder: (context) {
-                  // User "thien" không thể bị thay đổi
-                  if (user.username.toLowerCase() == 'thien') {
-                    return [
-                      PopupMenuItem(
-                        enabled: false,
-                        height: 48,
-                        child: Container(
-                          height: 40,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 12,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: Colors.grey[300]!,
-                              width: 1,
-                            ),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              'Không thể thay đổi',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ];
-                  }
-
-                  // Các user khác có thể được quản lý
                   List<PopupMenuItem<String>> items = [
                     PopupMenuItem(
                       value: 'toggle_admin',
