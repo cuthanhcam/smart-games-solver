@@ -2,10 +2,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/board_2048.dart' show Board2048, Dir;
-import '../../leaderboard/screens/leaderboard_screen.dart';
-import '../../leaderboard/utils/leaderboard_helper.dart';
-import '../../profile/utils/user_activity_helper.dart';
-import '../../auth/repositories/auth_repository.dart';
+import '../../../leaderboard/screens/leaderboard_screen.dart';
+import '../../../leaderboard/utils/leaderboard_helper.dart';
+import '../../../profile/utils/user_activity_helper.dart';
+import '../../../auth/repositories/auth_repository.dart';
 
 enum ToolMode { none, swapPickFirst, swapPickSecond, deletePick }
 
