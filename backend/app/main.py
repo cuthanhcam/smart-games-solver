@@ -26,7 +26,7 @@ from app.core.exception_handlers import (
 from app.models import user, game  # Import models to register them
 
 # Import routers
-from app.api.endpoints import auth, rubik, game_2048, sudoku, caro, friend, message, announcement, admin
+from app.api.endpoints import auth, rubik, game_2048, sudoku, caro, friend, message, announcement, admin, leaderboard
 
 # Create FastAPI app
 app = FastAPI(
@@ -157,6 +157,7 @@ app.include_router(rubik.router, prefix="/api")
 app.include_router(friend.router, prefix="/api")
 app.include_router(message.router, prefix="/api")
 app.include_router(announcement.router, prefix="/api")
+app.include_router(leaderboard.router, prefix="/api")
 app.include_router(game_2048.router, prefix="/api/games")
 app.include_router(sudoku.router, prefix="/api/games")
 app.include_router(caro.router, prefix="/api/games")

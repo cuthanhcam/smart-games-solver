@@ -597,11 +597,12 @@ async def save_game_score(
     **Authentication**: Required
     
     **Request Body**:
-    - `moves`: Total moves made in game
-    - `board_size`: Board size played (10-20)
-    - `difficulty`: Game difficulty ('Easy', 'Normal', 'Hard', 'Expert')
-    - `player_color`: Player's color ('X' or 'O')
-    - `opponent_type`: Opponent type ('human' or 'ai')
+    - `move_count`: Total moves made in game
+    - `difficulty`: Game difficulty
+    - `time_seconds`: Time taken to complete
+    - `board_size`: Board size played (optional, default: 15)
+    - `player_color`: Player's color (optional, default: 'X')
+    - `opponent_type`: Opponent type (optional, default: 'ai')
     
     **Returns**:
     - Saved score record with timestamp
@@ -610,11 +611,12 @@ async def save_game_score(
     
     saved_score = service.save_score(
         user_id=current_user.id,
-        moves=request.moves,
-        board_size=request.board_size,
+        moves=request.move_count,
+        board_size=request.board_size or 15,
         difficulty=request.difficulty,
-        player_color=request.player_color,
-        opponent_type=request.opponent_type
+        player_color=request.player_color or "X",
+        opponent_type=request.opponent_type or "ai",
+        time_seconds=request.time_seconds
     )
     
     return {

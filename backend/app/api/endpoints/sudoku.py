@@ -175,10 +175,10 @@ async def save_completion_score(
     **Authentication**: Required
     
     **Request Body**:
-    - `puzzle_id`: ID of completed puzzle
-    - `time_seconds`: Time taken to complete
-    - `hints_used`: Number of hints used
     - `difficulty`: Puzzle difficulty
+    - `time_seconds`: Time taken to complete
+    - `hints_used`: Number of hints used (optional)
+    - `puzzle_id`: ID of completed puzzle (optional)
     
     **Returns**:
     - Saved score record
@@ -194,10 +194,10 @@ async def save_completion_score(
     
     saved_score = service.save_score(
         user_id=current_user.id,
-        puzzle_id=request.puzzle_id,
+        puzzle_id=request.puzzle_id or 0,
         time_seconds=request.time_seconds,
-        hints_used=request.hints_used,
-        difficulty=request.difficulty
+        hints_used=request.hints_used or 0,
+        difficulty=request.difficulty.lower()
     )
     
     return {

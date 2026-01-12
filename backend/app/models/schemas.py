@@ -345,6 +345,8 @@ class Game2048SaveScoreRequest(BaseModel):
 class SudokuSaveScoreRequest(BaseModel):
     difficulty: str
     time_seconds: int
+    puzzle_id: Optional[int] = None
+    hints_used: Optional[int] = 0
 
 
 
@@ -352,3 +354,38 @@ class CaroSaveScoreRequest(BaseModel):
     difficulty: str
     time_seconds: int
     move_count: int
+    board_size: Optional[int] = 15
+    player_color: Optional[str] = "X"
+    opponent_type: Optional[str] = "ai"
+
+
+# ============= Leaderboard Schemas =============
+class LeaderboardEntryResponse(BaseModel):
+    rank: int
+    user_id: int
+    username: str
+    score: int
+    moves: Optional[int] = None
+    time_seconds: Optional[int] = None
+    completed: bool
+    created_at: datetime
+    game_data: Optional[dict] = None
+
+    class Config:
+        from_attributes = True
+
+
+class LeaderboardResponse(BaseModel):
+    game_type: str
+    entries: List[LeaderboardEntryResponse]
+    total_count: int
+    user_entry: Optional[LeaderboardEntryResponse] = None  # Current user's best entry
+
+
+class SaveGameScoreRequest(BaseModel):
+    game_type: str = Field(..., pattern="^(2048|sudoku|caro)$")
+    score: int
+    moves: Optional[int] = 0
+    time_seconds: Optional[int] = 0
+    completed: bool = False
+    game_data: Optional[dict] = None  # Additional game-specific data
