@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'game_state.dart';
 import 'caro_screen.dart';
-import '../../features/leaderboard/screens/leaderboard_screen.dart';
-import '../../features/auth/repositories/auth_repository.dart';
-import '../../features/profile/utils/user_activity_helper.dart';
+import '../leaderboard/screens/leaderboard_screen.dart';
+import '../auth/repositories/auth_repository.dart';
+import '../profile/utils/user_activity_helper.dart';
 
 class CaroHomeScreen extends StatefulWidget {
   const CaroHomeScreen({Key? key}) : super(key: key);
