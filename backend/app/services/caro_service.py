@@ -437,3 +437,43 @@ class CaroService:
                 "Practice pattern recognition"
             ]
         }
+    def save_score(
+        self,
+        user_id: int,
+        moves: int,
+        board_size: int,
+        difficulty: str,
+        player_color: str,
+        opponent_type: str
+    ) -> Dict[str, Any]:
+        """
+        Save Caro game score to database
+        
+        Args:
+            user_id: User who played the game
+            moves: Total moves made
+            board_size: Board size used
+            difficulty: Game difficulty
+            player_color: Player's color (X or O)
+            opponent_type: Type of opponent (human or ai)
+        
+        Returns:
+            Saved score data
+        """
+        score_data = {
+            "user_id": user_id,
+            "game_type": "caro",
+            "score": moves,  # Score is number of moves
+            "completed": True
+        }
+        
+        saved_score = self.game_score_repository.create(score_data)
+        
+        return {
+            "id": saved_score.id,
+            "user_id": saved_score.user_id,
+            "game_type": saved_score.game_type,
+            "score": saved_score.score,
+            "completed": saved_score.completed,
+            "played_at": saved_score.played_at.isoformat() if hasattr(saved_score, 'played_at') else None
+        }

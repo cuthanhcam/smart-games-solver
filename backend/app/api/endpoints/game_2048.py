@@ -12,7 +12,8 @@ from app.models.user import User
 from app.models.schemas import (
     Game2048NewRequest,
     Game2048MoveRequest,
-    Game2048StateResponse
+    Game2048StateResponse,
+    Game2048SaveScoreRequest
 )
 from app.services.game_2048_service import Game2048Service
 
@@ -113,9 +114,7 @@ async def make_move(
 
 @router.post("/save-score", status_code=201)
 async def save_game_score(
-    score: int,
-    moves: int,
-    won: bool = False,
+    request: "Game2048SaveScoreRequest",
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -124,7 +123,7 @@ async def save_game_score(
     
     **Authentication**: Required
     
-    **Request**:
+    **Request Body**:
     - `score`: Final game score
     - `moves`: Total moves made
     - `won`: Whether player reached 2048 tile
@@ -136,9 +135,9 @@ async def save_game_score(
     
     saved_score = service.save_score(
         user_id=current_user.id,
-        score=score,
-        moves=moves,
-        won=won
+        score=request.score,
+        moves=request.moves,
+        won=request.won
     )
     
     return {

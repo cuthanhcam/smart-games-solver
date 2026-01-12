@@ -13,7 +13,8 @@ from app.models.schemas import (
     CaroNewGameRequest,
     CaroMoveRequest,
     CaroGameStateResponse,
-    CaroAIMoveRequest
+    CaroAIMoveRequest,
+    CaroSaveScoreRequest
 )
 from app.services.caro_service import CaroService
 
@@ -582,4 +583,41 @@ async def get_caro_leaderboard(
             }
             for idx, player in enumerate(top_players)
         ]
+    }
+
+@router.post("/save-score", status_code=201)
+async def save_game_score(
+    request: "CaroSaveScoreRequest",
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Save Caro game score after completion
+    
+    **Authentication**: Required
+    
+    **Request Body**:
+    - `moves`: Total moves made in game
+    - `board_size`: Board size played (10-20)
+    - `difficulty`: Game difficulty ('Easy', 'Normal', 'Hard', 'Expert')
+    - `player_color`: Player's color ('X' or 'O')
+    - `opponent_type`: Opponent type ('human' or 'ai')
+    
+    **Returns**:
+    - Saved score record with timestamp
+    """
+    service = CaroService(db)
+    
+    saved_score = service.save_score(
+        user_id=current_user.id,
+        moves=request.moves,
+        board_size=request.board_size,
+        difficulty=request.difficulty,
+        player_color=request.player_color,
+        opponent_type=request.opponent_type
+    )
+    
+    return {
+        "message": "Caro score saved successfully",
+        "score": saved_score
     }

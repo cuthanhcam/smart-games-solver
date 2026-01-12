@@ -14,7 +14,8 @@ from app.models.schemas import (
     SudokuPuzzleResponse,
     SudokuValidateRequest,
     SudokuValidateResponse,
-    SudokuMoveRequest
+    SudokuMoveRequest,
+    SudokuSaveScoreRequest
 )
 from app.services.sudoku_service import SudokuService
 
@@ -164,10 +165,7 @@ async def get_hint(
 
 @router.post("/save-score", status_code=201)
 async def save_completion_score(
-    puzzle_id: int,
-    time_seconds: int,
-    hints_used: int,
-    difficulty: str,
+    request: "SudokuSaveScoreRequest",
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -176,7 +174,7 @@ async def save_completion_score(
     
     **Authentication**: Required
     
-    **Request**:
+    **Request Body**:
     - `puzzle_id`: ID of completed puzzle
     - `time_seconds`: Time taken to complete
     - `hints_used`: Number of hints used
@@ -196,10 +194,10 @@ async def save_completion_score(
     
     saved_score = service.save_score(
         user_id=current_user.id,
-        puzzle_id=puzzle_id,
-        time_seconds=time_seconds,
-        hints_used=hints_used,
-        difficulty=difficulty
+        puzzle_id=request.puzzle_id,
+        time_seconds=request.time_seconds,
+        hints_used=request.hints_used,
+        difficulty=request.difficulty
     )
     
     return {
