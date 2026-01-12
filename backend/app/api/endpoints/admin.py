@@ -10,6 +10,7 @@ from ...core.database import get_db
 from ...core.dependencies import get_current_admin_user
 from ...models.user import User
 from ...models.schemas import UserResponse
+from ...services.auth_service import auth_service
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
@@ -102,3 +103,44 @@ async def delete_user(
     db.commit()
     
     return {"message": "User deleted successfully"}
+
+
+@router.post("/users/{user_id}/ban", response_model=UserResponse)
+async def ban_user(
+    user_id: int,
+    duration_minutes: int,
+    reason: str,
+    admin_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Ban user (admin only)
+    Cannot ban yourself or other admins
+    """
+    banned_user = auth_service.ban_user(
+        db=db,
+        admin_id=admin_user.id,
+        user_id=user_id,
+        duration_minutes=duration_minutes,
+        reason=reason
+    )
+    
+    return UserResponse.from_orm(banned_user)
+
+
+@router.post("/users/{user_id}/unban", response_model=UserResponse)
+async def unban_user(
+    user_id: int,
+    admin_user: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Unban user (admin only)
+    """
+    unbanned_user = auth_service.unban_user(
+        db=db,
+        admin_id=admin_user.id,
+        user_id=user_id
+    )
+    
+    return UserResponse.from_orm(unbanned_user)
