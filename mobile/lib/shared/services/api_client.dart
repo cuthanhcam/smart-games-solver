@@ -322,6 +322,21 @@ class ApiClient {
     }
   }
 
+  Future<http.Response> getCaroLeaderboard({int limit = 10}) async {
+    try {
+      final response = await http
+          .get(
+            Uri.parse('$_baseUrl/games/caro/leaderboard?limit=$limit'),
+            headers: await _getHeaders(),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      return response;
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
   Future<http.Response> createCaroGame() async {
     try {
       final response = await http

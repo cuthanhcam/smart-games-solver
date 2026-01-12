@@ -363,7 +363,7 @@ class SudokuService:
         Returns:
             List of top scores
         """
-        scores = self.game_score_repository.get_leaderboard("sudoku", limit)
+        scores = self.game_score_repository.get_leaderboard(self.db, "sudoku", limit)
         
         result = []
         rank = 1

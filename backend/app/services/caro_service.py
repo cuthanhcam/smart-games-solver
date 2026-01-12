@@ -364,7 +364,7 @@ class CaroService:
     
     def get_leaderboard(self, limit: int = 10) -> List[Dict[str, Any]]:
         """Get Caro leaderboard"""
-        scores = self.game_score_repository.get_leaderboard("caro", limit)
+        scores = self.game_score_repository.get_leaderboard(self.db, "caro", limit)
         
         result = []
         rank = 1

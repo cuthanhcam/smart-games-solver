@@ -282,7 +282,7 @@ class Game2048Service:
         Returns:
             List of top scores with user info
         """
-        scores = self.game_score_repository.get_leaderboard("2048", limit, time_range)
+        scores = self.game_score_repository.get_leaderboard(self.db, "2048", limit)
         
         result = []
         rank = 1

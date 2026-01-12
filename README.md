@@ -1,14 +1,22 @@
-# Rubik Cube Solver
+# Multi-Game Platform
 
-Ứng dụng hỗ trợ nhận diện và giải Rubik's Cube 3x3 bằng camera điện thoại.
+Ứng dụng game đa chức năng với 4 trò chơi: 2048, Sudoku, Caro (Gomoku), và Rubik Cube Solver.
 
-## 📱 Tính năng
+## 🎮 Tính năng
 
-- **Nhận diện tự động**: Sử dụng camera để quét 6 mặt của khối Rubik
-- **Giải thuật tối ưu**: Sử dụng thuật toán Kociemba (Two-Phase Algorithm) đảm bảo giải trong tối đa 20 bước
-- **Hướng dẫn từng bước**: Hiển thị chi tiết các bước giải với mô tả rõ ràng
-- **Giao diện thân thiện**: UI/UX đơn giản, dễ sử dụng
-- **Offline-capable**: Có thể hoạt động mà không cần kết nối internet (sau khi tải về)
+### Games
+- **2048**: Classic number sliding puzzle game
+- **Sudoku**: Logic-based number puzzle (Easy/Medium/Hard)
+- **Caro (Gomoku)**: Five in a Row strategy game với AI
+- **Rubik Cube Solver**: Giải Rubik's Cube 3x3 bằng thuật toán Kociemba
+
+### Features
+- **Authentication**: Đăng ký, đăng nhập với JWT tokens
+- **Leaderboards**: Bảng xếp hạng cho từng game
+- **Statistics**: Theo dõi thống kê cá nhân
+- **Game History**: Lưu lịch sử chơi game
+- **Admin Panel**: Quản lý users, ban/unban system
+- **Clean Architecture**: Backend được thiết kế theo nguyên tắc Clean Architecture
 
 ## 🏗️ Kiến trúc hệ thống
 
@@ -18,116 +26,198 @@ rubik-cube-solver/
 │   ├── lib/
 │   │   ├── core/           # Core utilities, DI, theme
 │   │   └── features/       # Feature modules
-│   │       ├── cube_detection/  # Nhận diện Rubik
-│   │       └── cube_solver/     # Giải Rubik
+│   │       ├── auth/           # Authentication
+│   │       ├── game_2048/      # 2048 game
+│   │       ├── sudoku/         # Sudoku game
+│   │       ├── caro/           # Caro game
+│   │       └── rubik/          # Rubik solver
 │   └── assets/
 │
-├── backend/         # FastAPI (Backend)
+├── backend/         # FastAPI (Backend) - Clean Architecture
 │   ├── app/
-│   │   ├── api/            # REST API endpoints
-│   │   ├── services/       # Business logic
-│   │   └── models/         # Data models
-│   └── tests/
+│   │   ├── api/            # Controllers (HTTP endpoints)
+│   │   ├── services/       # Business logic layer
+│   │   ├── repositories/   # Data access layer
+│   │   ├── models/         # Domain models
+│   │   ├── core/           # Config, security, exceptions
+│   │   └── utils/          # Utilities
+│   ├── database/
+│   │   └── init.sql        # PostgreSQL schema
+│   ├── Dockerfile
+│   └── requirements.txt
 │
-└── docs/            # Documentation
+├── docker-compose.yml       # Docker orchestration
+├── Makefile                 # Quick commands
+└── docs/                    # Documentation
 ```
 
 ### Công nghệ sử dụng
 
 **Frontend (Mobile App)**
-- Flutter 3.x
-- Dart 3.x
+- Flutter 3.0+
+- Dart 3.0+
 - BLoC pattern (state management)
-- Camera plugin
 - Dio (HTTP client)
 
 **Backend (API Server)**
-- Python 3.10+
-- FastAPI
-- OpenCV (image processing)
+- Python 3.11+
+- FastAPI 0.109.0
+- SQLAlchemy 2.0 (ORM)
+- PostgreSQL 15
+- JWT Authentication
 - Kociemba (Rubik solver)
-- Uvicorn (ASGI server)
+- Docker & Docker Compose
 
-## 🚀 Hướng dẫn cài đặt
+## 🚀 Quick Start
 
-### Yêu cầu hệ thống
-
-- Flutter SDK >= 3.0.0
-- Dart SDK >= 3.0.0
-- Python 3.10 hoặc cao hơn
-- Android Studio / Xcode (để chạy mobile app)
-- Git
-
-### 1. Clone repository
+### Option 1: Docker Compose (Recommended) ⭐
 
 ```bash
-git clone https://github.com/yourusername/rubik-cube-solver.git
-cd rubik-cube-solver
+# Start all services (Database + Backend)
+docker-compose up -d
+
+# Check status
+docker-compose ps
+
+# View logs
+docker-compose logs -f backend
+
+# Access services
+# - API Server: http://localhost:8000
+# - API Docs: http://localhost:8000/docs
+# - Health Check: http://localhost:8000/health
+
+# Stop services
+docker-compose down
 ```
 
-### 2. Setup Backend
+### Option 2: Local Development
 
+#### Backend
+**Linux/Mac:**
 ```bash
 cd backend
-
-# Tạo virtual environment
-python -m venv venv
-
-# Kích hoạt virtual environment
-# Windows:
-venv\Scripts\activate
-# Linux/Mac:
-source venv/bin/activate
-
-# Cài đặt dependencies
-pip install -r requirements.txt
-
-# Copy environment file
-cp .env.example .env
-
-# Chạy server
-python -m app.main
+./start_server.sh
 ```
 
-Backend sẽ chạy tại: `http://localhost:8000`
-API Docs: `http://localhost:8000/docs`
+**Windows:**
+```powershell
+cd backend
+python -m venv venv
+.\venv\Scripts\activate
+pip install -r requirements.txt
+docker-compose up -d postgres  # Database only
+uvicorn app.main:app --reload
+```
 
-### 3. Setup Mobile App
-
+#### Mobile App
 ```bash
 cd mobile
-
-# Cài đặt dependencies
 flutter pub get
-
-# Chạy code generation (nếu cần)
-flutter pub run build_runner build --delete-conflicting-outputs
-
-# Chạy app
 flutter run
 ```
 
-**Lưu ý**: Cập nhật URL backend trong [mobile/lib/core/constants/api_constants.dart](mobile/lib/core/constants/api_constants.dart):
+### Using Makefile (Optional)
 
-```dart
-static const String baseUrl = 'http://YOUR_IP:8000/api';
+```bash
+make help          # Show all commands
+make docker-up     # Start with Docker
+make dev           # Start local development
+make docker-logs   # View logs
+make test          # Run tests
 ```
 
-Nếu test trên emulator:
-- Android emulator: `http://10.0.2.2:8000/api`
-- iOS simulator: `http://localhost:8000/api`
-- Real device: `http://YOUR_COMPUTER_IP:8000/api`
+## 📚 Documentation
 
-## 📖 Hướng dẫn sử dụng
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Complete deployment guide
+- **[DOCKER_GUIDE.md](DOCKER_GUIDE.md)** - Docker commands reference
+- **[backend/ARCHITECTURE.md](backend/ARCHITECTURE.md)** - Backend architecture
+- **API Docs**: http://localhost:8000/docs (when running)
 
-1. **Khởi động app**: Mở ứng dụng Rubik Cube Solver
-2. **Chọn "Start Scanning"**: Bắt đầu quét khối Rubik
-3. **Quét 6 mặt**: Di chuyển camera theo hướng dẫn để quét 6 mặt
-   - Front (Mặt trước)
-   - Right (Mặt phải)
-   - Back (Mặt sau)
-   - Left (Mặt trái)
-   - Top (Mặt trên)
+## 🔧 Configuration
+
+Copy environment file and customize:
+```bash
+cp backend/.env.example backend/.env
+```
+
+Key variables to change in production:
+- `SECRET_KEY`: Strong random key (min 32 chars)
+- `DATABASE_URL`: PostgreSQL connection string
+- `DEBUG`: Set to `False`
+- `ALLOWED_ORIGINS`: Your frontend URLs
+
+## 🎯 API Endpoints
+
+```
+Authentication:
+POST   /api/auth/register       - Register new user
+POST   /api/auth/login          - Login
+POST   /api/auth/logout         - Logout
+
+Games:
+GET    /api/games/2048/new      - New 2048 game
+POST   /api/games/2048/move     - Make move
+GET    /api/games/2048/leaderboard
+
+GET    /api/games/sudoku/new    - Get Sudoku puzzle
+POST   /api/games/sudoku/move   - Make move
+POST   /api/games/sudoku/hint   - Get hint
+
+POST   /api/games/caro/new      - New Caro game
+POST   /api/games/caro/move     - Make move
+POST   /api/games/caro/ai-move  - Get AI move
+
+POST   /api/rubik/solve         - Solve Rubik cube
+GET    /api/rubik/history       - User's solutions
+GET    /api/rubik/leaderboard   - Global leaderboard
+```
+
+## 🧪 Testing
+
+```bash
+# Backend tests
+cd backend
+pytest
+
+# With Docker
+docker-compose exec backend pytest
+
+# API testing
+curl http://localhost:8000/health
+```
+
+## 🛠️ Development
+
+### Database Operations
+
+```bash
+# Backup
+docker-compose exec postgres pg_dump -U postgres rubik_game_db > backup.sql
+
+# Restore
+cat backup.sql | docker-compose exec -T postgres psql -U postgres rubik_game_db
+
+# Access database shell
+docker-compose exec postgres psql -U postgres -d rubik_game_db
+
+# Reset database
+docker-compose down -v && docker-compose up -d
+```
+
+### Code Quality
+
+```bash
+# Format code
+cd backend
+black app/
+
+# Lint
+flake8 app/
+
+# Type checking
+mypy app/
+```
    - Bottom (Mặt dưới)
 4. **Xem kết quả**: Ứng dụng sẽ hiển thị các bước giải
 5. **Làm theo hướng dẫn**: Thực hiện từng bước để giải Rubik
