@@ -5,14 +5,10 @@ import 'features/auth/repositories/auth_repository.dart';
 import 'features/home/screens/home_page.dart';
 import 'features/auth/screens/login_page.dart';
 
-// Sudoku Game
-import 'minigames/sudoku/sudoku_screen.dart';
-
-// Caro Game
-import 'minigames/caro/home_screen.dart';
-
-// 2048 Game
-import 'minigames/g2048/screen_2048.dart';
+// Game screens from features
+import 'features/games/sudoku/screens/sudoku_screen.dart';
+import 'features/games/caro/screens/caro_home_screen.dart';
+import 'features/games/game_2048/screens/game_2048_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

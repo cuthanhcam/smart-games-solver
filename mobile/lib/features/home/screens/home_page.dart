@@ -9,7 +9,7 @@ import '../../../shared/widgets/clock_widget.dart';
 import '../../../shared/widgets/game_bg.dart';
 import '../../../shared/widgets/gradient_snackbar.dart';
 import '../../profile/utils/user_activity_helper.dart';
-import '../../../minigames/sudoku/sudoku_screen.dart';
+import '../../games/sudoku/screens/sudoku_screen.dart';
 import '../../games/rubik/screens/rubik_main.dart';
 import '../../leaderboard/screens/leaderboard_screen.dart';
 import '../../profile/screens/user_activity_screen.dart';
