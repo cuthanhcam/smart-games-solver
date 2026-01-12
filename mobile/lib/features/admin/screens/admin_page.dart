@@ -230,12 +230,6 @@ class _AdminPageState extends State<AdminPage> {
       return;
     }
 
-    // Không thể cấm admin khác
-    if (user.isAdmin) {
-      _showErrorSnackBar('Không thể cấm admin');
-      return;
-    }
-
     final banDuration = await showDialog<Duration?>(
       context: context,
       builder: (context) => AlertDialog(
@@ -394,119 +388,102 @@ class _AdminPageState extends State<AdminPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Background Image
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/background.jpg',
-              fit: BoxFit.cover,
-            ),
-          ),
-          // Overlay with gradient
-          Positioned.fill(
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0x80667eea),
-                    Color(0x80764ba2),
-                    Color(0x80f093fb),
-                  ],
-                ),
+      backgroundColor: const Color(0xFFF7FAFC),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // App Bar - styled like user home page
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon:
+                        const Icon(Icons.arrow_back, color: Color(0xFF2D3748)),
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Quản lý User',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF2D3748),
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: _loadUsers,
+                    icon: const Icon(Icons.refresh, color: Color(0xFF2D3748)),
+                  ),
+                ],
               ),
             ),
-          ),
-          // Main Content
-          SafeArea(
-            child: Column(
-              children: [
-                // App Bar
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Quản lý User',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        onPressed: _loadUsers,
-                        icon: const Icon(Icons.refresh, color: Colors.white),
-                      ),
-                    ],
+            // Statistics
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
                   ),
-                ),
-                // Statistics
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildStatCard(
+                    'Tổng tài khoản',
+                    _totalUsers.toString(),
+                    Colors.blue,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildStatCard(
-                        'Tổng tài khoản',
-                        _totalUsers.toString(),
-                        Colors.blue,
-                      ),
-                      _buildStatCard(
-                        'Admin',
-                        _adminCount.toString(),
-                        Colors.red,
-                      ),
-                    ],
+                  _buildStatCard(
+                    'Admin',
+                    _adminCount.toString(),
+                    Colors.red,
                   ),
-                ),
-                const SizedBox(height: 16),
-                // Users List
-                Expanded(
-                  child: _isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : _users.isEmpty
-                          ? const Center(
-                              child: Text(
-                                'Không có user nào',
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.white),
-                              ),
-                            )
-                          : ListView.builder(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              itemCount: _users.length,
-                              itemBuilder: (context, index) {
-                                final user = _users[index];
-                                return _buildUserCard(user);
-                              },
-                            ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            // Users List
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _users.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'Không có user nào',
+                            style: TextStyle(
+                                fontSize: 18, color: Color(0xFF2D3748)),
+                          ),
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: _users.length,
+                          itemBuilder: (context, index) {
+                            final user = _users[index];
+                            return _buildUserCard(user);
+                          },
+                        ),
+            ),
+          ],
+        ),
       ),
     );
   }

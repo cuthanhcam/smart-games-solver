@@ -200,10 +200,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [
-                    Colors.blue.shade50,
-                    Colors.indigo.shade100,
-                  ],
+                  colors: _isAdmin
+                      ? [
+                          Colors.blueGrey.shade50,
+                          Colors.blueGrey.shade100,
+                        ]
+                      : [
+                          const Color(0xFFF7FAFC),
+                          const Color(0xFFEBF8FF),
+                        ],
                 ),
               ),
             ),
@@ -316,7 +321,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
       child: Column(
         children: [
-
           // Greeting
           Text(
             '${_getGreeting()}, ${_currentUsername ?? 'tu'}!',
@@ -565,7 +569,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Navigator.pushNamed(context, '/caro');
             },
           ),
-
         ],
       ),
     );
@@ -670,10 +673,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
     );
   }
-
-
-
-
 
   void _showGameDescriptionDialog(
     BuildContext context,
@@ -807,7 +806,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
-                  child: const Icon(Icons.grid_on, color: Colors.white, size: 20),
+                  child:
+                      const Icon(Icons.grid_on, color: Colors.white, size: 20),
                 ),
               ),
               const SizedBox(width: 12),
@@ -1068,54 +1068,43 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-
-
   // User Drawer
   Widget _buildUserDrawer() {
     return Drawer(
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF57BCCE),
-              Color(0xFFA8D3CA),
-              Color(0xFFDADCB7),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // User Profile Section
-                _buildUserProfileSection(),
-
-                const SizedBox(height: 20),
-
-                // Games Section
-                _buildGamesSection(),
-
-                const SizedBox(height: 20),
-
-                // Utilities Section
-                _buildUtilitiesSection(),
-
-                const SizedBox(height: 20),
-
-                // Other Section
-                _buildOtherSection(),
-
-                const SizedBox(height: 20),
-
-                // Logout Button
-                _buildLogoutButton(),
-
-                const SizedBox(height: 20),
-              ],
+      backgroundColor: Colors.white,
+      child: SafeArea(
+        child: Column(
+          children: [
+            // User Profile Section (Header)
+            Container(
+              decoration: const BoxDecoration(
+                color: const Color(0xFF57BCCE),
+              ),
+              child: _buildUserProfileSection(),
             ),
-          ),
+
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    // Games Section
+                    _buildGamesSection(),
+                    const SizedBox(height: 20),
+                    // Utilities Section
+                    _buildUtilitiesSection(),
+                    const SizedBox(height: 20),
+                    // Other Section
+                    _buildOtherSection(),
+                    const SizedBox(height: 20),
+                    // Logout Button
+                    _buildLogoutButton(),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -1124,44 +1113,37 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   // Admin Drawer
   Widget _buildAdminDrawer() {
     return Drawer(
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFE74C3C),
-              Color(0xFF9B59B6),
-              Color(0xFF3498DB),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Admin Profile Section
-                _buildAdminProfileSection(),
-
-                const SizedBox(height: 20),
-
-                // Admin Games Section
-                _buildAdminGamesSection(),
-
-                const SizedBox(height: 20),
-
-                // Admin Utilities Section
-                _buildAdminUtilitiesSection(),
-
-                const SizedBox(height: 20),
-
-                // Logout Button
-                _buildLogoutButton(),
-
-                const SizedBox(height: 20),
-              ],
+      backgroundColor: Colors.white,
+      child: SafeArea(
+        child: Column(
+          children: [
+            // Admin Profile Section (Header)
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFF57BCCE),
+              ),
+              child: _buildAdminProfileSection(),
             ),
-          ),
+
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    // Admin Games Section
+                    _buildAdminGamesSection(),
+                    const SizedBox(height: 20),
+                    // Admin Utilities Section
+                    _buildAdminUtilitiesSection(),
+                    const SizedBox(height: 20),
+                    // Logout Button
+                    _buildLogoutButton(),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -1326,7 +1308,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
               const SizedBox(width: 12),
               const Text(
-                'Mini Games',
+                'Games',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 18,
@@ -1424,7 +1406,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 width: 4,
                 height: 20,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.black,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1432,7 +1414,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               const Text(
                 'Games',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -1485,8 +1467,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             Navigator.pushNamed(context, '/caro');
           },
         ),
-
-
       ],
     );
   }
@@ -1598,7 +1578,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 width: 4,
                 height: 20,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.black,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1606,9 +1586,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               const Text(
                 'User Management',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
                   decorationColor: Colors.yellow,
                 ),
               ),

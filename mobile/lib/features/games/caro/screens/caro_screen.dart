@@ -483,17 +483,17 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F1419),
+      backgroundColor: const Color(0xFFF7FAFC),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
+        foregroundColor: const Color(0xFF2D3748),
         title: Text(
           widget.gameMode == GameMode.pvE ? 'Người vs Máy' : 'AI vs AI',
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-            color: Colors.white,
+            color: Color(0xFF2D3748),
           ),
         ),
         actions: [
@@ -522,8 +522,8 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                   ],
                 ),
-                child: const Icon(Icons.emoji_events,
-                    color: Color(0xFFFFD700), size: 24), // Màu vàng gold
+                child: const Icon(Icons.leaderboard,
+                    color: Color(0xFF4299E1), size: 24), // Professional Blue
               ),
             ),
           ),
@@ -559,17 +559,7 @@ class _GameScreenState extends State<GameScreen> {
       body: Stack(
         children: [
           Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF0F1419),
-                  Color(0xFF1A1F2E),
-                  Color(0xFF2D3748),
-                ],
-              ),
-            ),
+            color: const Color(0xFFF7FAFC),
             child: Column(
               children: [
                 // Thanh thông tin người chơi và máy (2 hàng)
@@ -577,24 +567,17 @@ class _GameScreenState extends State<GameScreen> {
                   margin: const EdgeInsets.all(16),
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        const Color(0xFF1E293B),
-                        const Color(0xFF334155),
-                      ],
-                    ),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.1),
+                      color: const Color(0xFFE2E8F0),
                       width: 1,
                     ),
                   ),
@@ -639,7 +622,7 @@ class _GameScreenState extends State<GameScreen> {
                                         ? 'Máy 1'
                                         : _currentUsername,
                                     style: const TextStyle(
-                                      color: Colors.white,
+                                      color: Color(0xFF2D3748),
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -651,7 +634,7 @@ class _GameScreenState extends State<GameScreen> {
                                         ? 'AI Tấn công'
                                         : 'Người chơi',
                                     style: const TextStyle(
-                                        color: Colors.white70, fontSize: 12),
+                                        color: Color(0xFF718096), fontSize: 12),
                                   ),
                                 ],
                               ),
@@ -669,7 +652,7 @@ class _GameScreenState extends State<GameScreen> {
                                         ? 'Máy 2'
                                         : 'Máy',
                                     style: const TextStyle(
-                                      color: Colors.white,
+                                      color: Color(0xFF2D3748),
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -680,7 +663,7 @@ class _GameScreenState extends State<GameScreen> {
                                         ? 'AI Phòng thủ'
                                         : '${_difficultyLabel(widget.difficulty)}',
                                     style: const TextStyle(
-                                        color: Colors.white70, fontSize: 12),
+                                        color: Color(0xFF718096), fontSize: 12),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ],

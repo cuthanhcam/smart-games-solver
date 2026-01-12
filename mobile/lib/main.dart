@@ -31,50 +31,58 @@ class MyApp extends StatelessWidget {
       title: 'Neon Game Auth',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: scheme,
-        brightness: Brightness.dark,
-        textTheme: ThemeData.dark().textTheme.apply(
-              bodyColor: Colors.white,
-              displayColor: Colors.white,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF4299E1), // Professional Blue
+          brightness: Brightness.light,
+          primary: const Color(0xFF4299E1),
+          secondary: const Color(0xFF48BB78), // Green accent
+          surface: Colors.white,
+        ),
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: const Color(0xFFF7FAFC), // Very light gray blue
+        textTheme: ThemeData.light().textTheme.apply(
+              bodyColor: const Color(0xFF2D3748), // Dark slate for text
+              displayColor: const Color(0xFF1A202C),
             ),
-        scaffoldBackgroundColor: Colors.transparent,
-        inputDecorationTheme: const InputDecorationTheme(
+        inputDecorationTheme: InputDecorationTheme(
           filled: true,
-          fillColor: Color(0xAA1A1E2A),
+          fillColor: Colors.white,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16)),
-            borderSide: BorderSide(color: Color(0xFF5CE1E6)),
+            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            borderSide: BorderSide(color: Colors.grey.shade300),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16)),
-            borderSide: BorderSide(color: Color(0xFF5CE1E6)),
+            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            borderSide: BorderSide(color: Colors.grey.shade300),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16)),
-            borderSide: BorderSide(color: Color(0xFF7C4DFF), width: 2),
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderSide: BorderSide(color: Color(0xFF4299E1), width: 2),
           ),
-          labelStyle: TextStyle(fontWeight: FontWeight.w600),
+          labelStyle: TextStyle(color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
-            minimumSize:
-                const WidgetStatePropertyAll(Size(double.infinity, 52)),
+            minimumSize: const WidgetStatePropertyAll(Size(double.infinity, 50)),
             shape: WidgetStatePropertyAll(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            elevation: const WidgetStatePropertyAll(8),
-            shadowColor: const WidgetStatePropertyAll(Color(0xFF7C4DFF)),
-            backgroundColor: const WidgetStatePropertyAll(Color(0xFF7C4DFF)),
+            elevation: const WidgetStatePropertyAll(2),
+            shadowColor: WidgetStatePropertyAll(Colors.black.withOpacity(0.1)),
+            backgroundColor: const WidgetStatePropertyAll(Color(0xFF4299E1)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
+            padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 12)),
           ),
         ),
-        cardTheme: const CardThemeData(
-          color: Color(0xAA0E1220),
-          elevation: 12,
-          margin: EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(24)),
-            side: BorderSide(color: Color(0xFF5CE1E6), width: 1.2),
+        cardTheme: CardThemeData(
+          color: Colors.white,
+          elevation: 4,
+          shadowColor: Colors.black.withOpacity(0.05),
+          margin: const EdgeInsets.all(16),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+            side: BorderSide.none,
           ),
         ),
       ),

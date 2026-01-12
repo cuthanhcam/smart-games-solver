@@ -773,16 +773,10 @@ class _SudokuScreenState extends State<SudokuScreen>
     return Scaffold(
       body: Stack(
         children: [
-          // Background color
+          // Clean Background
           Positioned.fill(
             child: Container(
-              color: const Color(0xFFC0E5EE),
-            ),
-          ),
-          // Semi-transparent overlay
-          Positioned.fill(
-            child: Container(
-              color: Colors.white.withOpacity(0.7),
+              color: const Color(0xFFF7FAFC), // Light Gray/Blue
             ),
           ),
           // Main content
@@ -821,19 +815,7 @@ class _SudokuScreenState extends State<SudokuScreen>
                                       color: const Color(0xFF2D3748),
                                       fontSize: 22,
                                       fontWeight: FontWeight.bold,
-                                      shadows: [
-                                        Shadow(
-                                          offset: const Offset(2, 2),
-                                          blurRadius: 4,
-                                          color: Colors.black.withOpacity(0.3),
-                                        ),
-                                        Shadow(
-                                          offset: const Offset(-1, -1),
-                                          blurRadius: 2,
-                                          color: Colors.white.withOpacity(0.5),
-                                        ),
-                                      ],
-                                      letterSpacing: 1.2,
+                                      letterSpacing: 0.5,
                                     ),
                                   ),
                                 ),
@@ -856,18 +838,18 @@ class _SudokuScreenState extends State<SudokuScreen>
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.yellow[50],
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(8),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.yellow.withOpacity(0.2),
+                                color: Colors.black.withOpacity(0.05),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
                               ),
                             ],
                           ),
-                          child: const Icon(Icons.emoji_events,
-                              color: Colors.amber, size: 24),
+                          child: const Icon(Icons.leaderboard,
+                              color: Color(0xFF4299E1), size: 24), // Professional Blue
                         ),
                       ),
                     ],

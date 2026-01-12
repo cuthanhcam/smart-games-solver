@@ -609,7 +609,7 @@ class _Game2048ScreenState extends State<Game2048Screen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAF8F0),
+      backgroundColor: const Color(0xFFF7FAFC), // App Theme Background
       body: Stack(
         children: [
           // Main Content
@@ -645,21 +645,9 @@ class _Game2048ScreenState extends State<Game2048Screen>
                                   child: Text(
                                     '2048',
                                     style: TextStyle(
-                                      color: const Color(0xFF877355),
+                                      color: const Color(0xFF2D3748),
                                       fontSize: 26,
                                       fontWeight: FontWeight.bold,
-                                      shadows: [
-                                        Shadow(
-                                          offset: const Offset(2, 2),
-                                          blurRadius: 4,
-                                          color: Colors.black.withOpacity(0.3),
-                                        ),
-                                        Shadow(
-                                          offset: const Offset(-1, -1),
-                                          blurRadius: 2,
-                                          color: Colors.white.withOpacity(0.5),
-                                        ),
-                                      ],
                                       letterSpacing: 1.2,
                                     ),
                                   ),
@@ -683,20 +671,19 @@ class _Game2048ScreenState extends State<Game2048Screen>
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: const Color(
-                                0xFFF5F0E6), // Màu be nhạt như trong hình
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(8),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withOpacity(0.05),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
                               ),
                             ],
                           ),
-                          child: const Icon(Icons.emoji_events,
-                              color: Color(0xFFFFD700),
-                              size: 24), // Màu vàng gold
+                          child: const Icon(Icons.leaderboard,
+                              color: Color(0xFF4299E1),
+                              size: 24), // Professional Blue
                         ),
                       ),
                     ],
@@ -713,13 +700,13 @@ class _Game2048ScreenState extends State<Game2048Screen>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8), // Giảm padding dọc
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEFEBE0), // Màu beige nhạt
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                              color: const Color(0xFFCDC1B4), width: 1),
+                              color: const Color(0xFFCBD5E0), width: 1),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withOpacity(0.05),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -730,7 +717,7 @@ class _Game2048ScreenState extends State<Game2048Screen>
                             Text(
                               'SCORE',
                               style: TextStyle(
-                                color: const Color(0xFF776E65), // Màu nâu xám
+                                color: const Color(0xFF718096),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 1,
@@ -740,7 +727,7 @@ class _Game2048ScreenState extends State<Game2048Screen>
                             Text(
                               '${board.score}',
                               style: TextStyle(
-                                color: const Color(0xFF776E65),
+                                color: const Color(0xFF2D3748),
                                 fontSize: 14, // Tăng font size cho số điểm
                                 fontWeight: FontWeight.w900, // In đậm hơn
                               ),
@@ -755,13 +742,13 @@ class _Game2048ScreenState extends State<Game2048Screen>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8), // Giảm padding dọc
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF5F0E6), // Màu beige sáng hơn
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                              color: const Color(0xFFCDC1B4), width: 1),
+                              color: const Color(0xFFCBD5E0), width: 1),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withOpacity(0.05),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -772,7 +759,7 @@ class _Game2048ScreenState extends State<Game2048Screen>
                             Text(
                               'BEST',
                               style: TextStyle(
-                                color: const Color(0xFF776E65),
+                                color: const Color(0xFF718096),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 1,
@@ -782,7 +769,7 @@ class _Game2048ScreenState extends State<Game2048Screen>
                             Text(
                               '${board.bestScore}',
                               style: TextStyle(
-                                color: const Color(0xFF776E65),
+                                color: const Color(0xFF2D3748),
                                 fontSize: 14, // Tăng font size cho số điểm
                                 fontWeight: FontWeight.w900, // In đậm hơn
                               ),

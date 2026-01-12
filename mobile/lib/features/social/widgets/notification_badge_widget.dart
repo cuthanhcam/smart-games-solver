@@ -69,14 +69,7 @@ class _NotificationBadgeWidgetState extends State<NotificationBadgeWidget> {
       width: 46,
       height: 46,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF57BCCE),
-            Color(0xFFA8D3CA),
-          ],
-        ),
+        color: const Color(0xFF57BCCE),
         borderRadius: BorderRadius.circular(23),
         boxShadow: [
           BoxShadow(

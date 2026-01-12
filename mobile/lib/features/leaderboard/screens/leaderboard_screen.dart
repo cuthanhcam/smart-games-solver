@@ -192,207 +192,202 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
   }
 
+  String _formatDuration(int seconds) {
+    final m = seconds ~/ 60;
+    final s = seconds % 60;
+    return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF57BCCE), Color(0xFFA8D3CA), Color(0xFFDADCB7)],
-          ),
+      backgroundColor: const Color(0xFFF7FAFC),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        foregroundColor: const Color(0xFF2D3748),
+        title: const Text(
+          'Bảng Xếp Hạng',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              Container(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.arrow_back,
-                          color: Colors.white, size: 28),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Game Selection
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+              ),
+              child: Row(
+                children: [
+                  for (final game in ['Sudoku', 'Caro', '2048'])
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() {
+                          _selectedGame = game;
+                          _selectedDifficulty = 'Easy';
+                        }),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                            color: _selectedGame == game
+                                ? const Color(0xFF57BCCE)
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            game,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: _selectedGame == game
+                                  ? Colors.white
+                                  : const Color(0xFF718096),
+                              fontWeight: _selectedGame == game
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    const SizedBox(width: 16),
-                    const Text(
-                      'Bảng Xếp Hạng',
+                ],
+              ),
+            ),
+
+            // Difficulty Selection
+            if (_selectedGame == '2048')
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEDF2F7),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'HIGHSCORE',
                       style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                        color: Color(0xFF4A5568),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 1,
+                      ),
                     ),
+                  ),
+                ),
+              )
+            else
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8,
+                  children: [
+                    for (final diff in _difficultiesUi)
+                      GestureDetector(
+                        onTap: () => setState(() => _selectedDifficulty = diff),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: _selectedDifficulty == diff
+                                ? const Color(0xFF57BCCE)
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: _selectedDifficulty == diff
+                                  ? const Color(0xFF57BCCE)
+                                  : const Color(0xFFE2E8F0),
+                            ),
+                            boxShadow: _selectedDifficulty == diff
+                                ? [
+                                    BoxShadow(
+                                      color: const Color(0xFF57BCCE)
+                                          .withOpacity(0.3),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 4),
+                                    )
+                                  ]
+                                : [],
+                          ),
+                          child: Text(
+                            diff,
+                            style: TextStyle(
+                              color: _selectedDifficulty == diff
+                                  ? Colors.white
+                                  : const Color(0xFF718096),
+                              fontWeight: _selectedDifficulty == diff
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
 
-              // Chọn game
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      for (final game in ['Sudoku', 'Caro', '2048'])
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () => setState(() {
-                              _selectedGame = game;
-                              _selectedDifficulty = 'Easy';
-                            }),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              decoration: BoxDecoration(
-                                color: _selectedGame == game
-                                    ? Colors.white.withOpacity(0.3)
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                game,
-                                textAlign: TextAlign.center,
+            const SizedBox(height: 20),
+
+            // Leaderboard Content
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _error != null
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.error_outline,
+                                  size: 64, color: Colors.red[300]),
+                              const SizedBox(height: 16),
+                              Text(
+                                _error!,
                                 style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: _selectedGame == game
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Thanh tiêu đề/độ khó
-              if (_selectedGame == '2048')
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'HIGHSCORE',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              else
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 4,
-                      runSpacing: 4,
-                      children: [
-                        for (final diff in _difficultiesUi)
-                          GestureDetector(
-                            onTap: () =>
-                                setState(() => _selectedDifficulty = diff),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 6, horizontal: 8),
-                              decoration: BoxDecoration(
-                                color: _selectedDifficulty == diff
-                                    ? Colors.white.withOpacity(0.3)
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                diff,
+                                    color: Colors.red[700], fontSize: 14),
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: _selectedDifficulty == diff
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                  fontSize: 10,
-                                ),
                               ),
-                            ),
+                              const SizedBox(height: 16),
+                              ElevatedButton(
+                                onPressed: _loadLeaderboardData,
+                                child: const Text('Thử lại'),
+                              ),
+                            ],
                           ),
-                      ],
-                    ),
-                  ),
-                ),
-
-              const SizedBox(height: 20),
-
-              // Nội dung leaderboard
-              Expanded(
-                child: _isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(color: Colors.white),
-                      )
-                    : _error != null
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.error_outline,
-                                    size: 64, color: Colors.red[400]),
-                                const SizedBox(height: 20),
-                                Text(
-                                  _error!,
-                                  style: TextStyle(
-                                      color: Colors.red[700], fontSize: 14),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: 20),
-                                ElevatedButton(
-                                  onPressed: _loadLeaderboardData,
-                                  child: const Text('Thử lại'),
-                                ),
-                              ],
-                            ),
-                          )
-                        : Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 20),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.9),
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 5),
-                                ),
-                              ],
-                            ),
+                        )
+                      : Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.vertical(top: Radius.circular(20)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 10,
+                                offset: const Offset(0, -5),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius:
+                                BorderRadius.vertical(top: Radius.circular(20)),
                             child: _buildLeaderboardContent(),
                           ),
-              ),
-
-              const SizedBox(height: 20),
-            ],
-          ),
+                        ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../repositories/auth_repository.dart';
-import '../../../shared/widgets/game_button.dart';
-import '../../../shared/widgets/game_bg.dart';
 import '../../../shared/widgets/app_logo.dart';
 import '../../../shared/widgets/ban_notification_dialog.dart';
 import '../../home/screens/home_page.dart';
@@ -127,7 +125,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     return Scaffold(
       body: Stack(
         children: [
-          // Background with gradient colors (replaced image background)
+          // Background with gradient colors (matched with register page)
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
@@ -135,24 +133,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.blue.shade100,
-                    Colors.cyan.shade200,
-                  ],
-                ),
-              ),
-            ),
-          ),
-          // Overlay with accent gradient
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0x8057BCCE),
-                    Color(0x80A8D3CA),
-                    Color(0x80DADCB7),
+                    Color(0xFFE0F2FE), // Light blue
+                    Color(0xFFF0F9FF), // Very light blue
+                    Color(0xFFFDF4FF), // Very light purple
                   ],
                 ),
               ),
@@ -177,15 +160,15 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         ),
                         child: Container(
                           decoration: BoxDecoration(
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(20),
-                            gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Color(0xB3FFFFFF), // 70% opacity
-                                Color(0xB3F8F9FF), // 70% opacity
-                              ],
-                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blue.withOpacity(0.05),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                              ),
+                            ],
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(20.0),
@@ -263,8 +246,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                         ),
                                       ),
                                       style: const TextStyle(
-                                        color: Colors.black87,
-                                        fontSize: 10,
+                                        color: Color(0xFF2D3748),
+                                        fontSize: 14,
                                       ),
                                       validator: (v) =>
                                           (v == null || v.trim().isEmpty)
@@ -330,8 +313,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                             ),
                                           ),
                                           style: const TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 10,
+                                            color: Color(0xFF2D3748),
+                                            fontSize: 14,
                                           ),
                                           obscureText: obscured,
                                           validator: (v) =>
@@ -386,33 +369,18 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                   // Login Button
                                   Container(
                                     width: double.infinity,
-                                    height: 56,
-                                    decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        colors: [
-                                          Color(0xFF57BCCE),
-                                          Color(0xFFA8D3CA)
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(12),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: const Color(0xFF57BCCE)
-                                              .withOpacity(0.4),
-                                          blurRadius: 20,
-                                          offset: const Offset(0, 10),
-                                        ),
-                                      ],
-                                    ),
+                                    height: 50,
                                     child: ElevatedButton(
                                       onPressed: _loading ? null : _handleLogin,
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.transparent,
-                                        shadowColor: Colors.transparent,
+                                        backgroundColor:
+                                            const Color(0xFF57BCCE),
+                                        foregroundColor: Colors.white,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),
                                         ),
+                                        elevation: 2,
                                       ),
                                       child: _loading
                                           ? const SizedBox(

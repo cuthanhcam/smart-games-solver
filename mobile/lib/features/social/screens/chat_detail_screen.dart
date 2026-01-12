@@ -253,14 +253,14 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Color(0xFF57BCCE),
+                  Color(0xFFA8D3CA),
                   Color(0xFFA8D3CA),
                 ],
               ),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF57BCCE).withOpacity(0.3),
+                  color: const Color(0xFFA8D3CA).withOpacity(0.3),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -278,7 +278,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF57BCCE),
+              color: Color(0xFFA8D3CA),
             ),
           ),
           const SizedBox(height: 8),

@@ -88,7 +88,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF57BCCE),
+              Color(0xFFA8D3CA),
               Color(0xFFA8D3CA),
               Color(0xFFDADCB7),
             ],
@@ -260,7 +260,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                const Color(0xFF57BCCE).withOpacity(0.3),
+                                const Color(0xFFA8D3CA).withOpacity(0.3),
                                 const Color(0xFFA8D3CA).withOpacity(0.1),
                               ],
                             ),
@@ -298,7 +298,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
                             child: ElevatedButton(
                               onPressed: _markAsRead,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF57BCCE),
+                                backgroundColor: const Color(0xFFA8D3CA),
                                 foregroundColor: Colors.white,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 16),

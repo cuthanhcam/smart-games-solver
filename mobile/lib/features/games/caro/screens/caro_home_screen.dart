@@ -111,11 +111,11 @@ class _CaroHomeScreenState extends State<CaroHomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F1419),
+      backgroundColor: const Color(0xFFF7FAFC), // App Theme Background
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
+        foregroundColor: const Color(0xFF2D3748), // Dark Text
         title: AnimatedBuilder(
           animation: _titleAnimationController,
           builder: (context, child) {
@@ -128,19 +128,7 @@ class _CaroHomeScreenState extends State<CaroHomeScreen>
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 22,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        offset: const Offset(2, 2),
-                        blurRadius: 4,
-                        color: Colors.black.withOpacity(0.3),
-                      ),
-                      Shadow(
-                        offset: const Offset(-1, -1),
-                        blurRadius: 2,
-                        color: Colors.white.withOpacity(0.2),
-                      ),
-                    ],
+                    color: const Color(0xFF2D3748),
                     letterSpacing: 1.2,
                   ),
                 ),
@@ -164,18 +152,18 @@ class _CaroHomeScreenState extends State<CaroHomeScreen>
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF5F0E6),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withOpacity(0.05),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-                child: const Icon(Icons.emoji_events,
-                    color: Color(0xFFFFD700), size: 24),
+                child: const Icon(Icons.leaderboard,
+                    color: Color(0xFF4299E1), size: 24), // Professional Blue
               ),
             ),
           ),
@@ -184,17 +172,7 @@ class _CaroHomeScreenState extends State<CaroHomeScreen>
       body: Stack(
         children: [
           Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF0F1419),
-                  Color(0xFF1A1F2E),
-                  Color(0xFF2D3748),
-                ],
-              ),
-            ),
+            color: const Color(0xFFF7FAFC),
             child: SafeArea(
               child: FadeTransition(
                 opacity: _contentFadeAnimation,

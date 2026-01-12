@@ -377,12 +377,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFF57BCCE).withOpacity(0.1),
+                color: const Color(0xFFA8D3CA).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(
                 Icons.notifications,
-                color: Color(0xFF57BCCE),
+                color: Color(0xFFA8D3CA),
                 size: 20,
               ),
             ),
@@ -529,15 +529,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF57BCCE),
-              Color(0xFFA8D3CA),
-              Color(0xFFDADCB7),
-            ],
-          ),
+          color: const Color(0xFFA8D3CA),
         ),
         child: SafeArea(
           child: Column(
@@ -629,7 +621,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       ? const Center(
                           child: CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(
-                                Color(0xFF57BCCE)),
+                                Color(0xFFA8D3CA)),
                           ),
                         )
                       : _announcements.isEmpty
@@ -640,14 +632,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                   Icon(
                                     Icons.notifications_none,
                                     size: 64,
-                                    color: Color(0xFF57BCCE),
+                                    color: Color(0xFFA8D3CA),
                                   ),
                                   SizedBox(height: 16),
                                   Text(
                                     'Không có thông báo nào',
                                     style: TextStyle(
                                       fontSize: 18,
-                                      color: Color(0xFF57BCCE),
+                                      color: Color(0xFFA8D3CA),
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -656,7 +648,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                     'Các thông báo từ admin sẽ hiển thị ở đây',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Color(0xFF57BCCE),
+                                      color: Color(0xFFA8D3CA),
                                     ),
                                   ),
                                 ],
@@ -664,7 +656,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             )
                           : RefreshIndicator(
                               onRefresh: _loadAnnouncements,
-                              color: const Color(0xFF57BCCE),
+                              color: const Color(0xFFA8D3CA),
                               child: ListView.builder(
                                 padding: const EdgeInsets.all(16),
                                 itemCount: _announcements.length,
@@ -678,19 +670,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                   return Container(
                                     margin: const EdgeInsets.only(bottom: 6),
                                     decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                          Color(0xFF57BCCE),
-                                          Color(0xFFA8D3CA),
-                                          Color(0xFFDADCB7),
-                                        ],
-                                      ),
+                                      color: const Color(0xFFA8D3CA),
                                       borderRadius: BorderRadius.circular(16),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: const Color(0xFF57BCCE)
+                                          color: const Color(0xFFA8D3CA)
                                               .withOpacity(0.2),
                                           blurRadius: 8,
                                           offset: const Offset(0, 4),
@@ -707,7 +691,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                             Colors.white.withOpacity(0.9),
                                         child: Icon(
                                           Icons.notifications,
-                                          color: const Color(0xFF57BCCE),
+                                          color: const Color(0xFFA8D3CA),
                                           size: 16,
                                         ),
                                       ),

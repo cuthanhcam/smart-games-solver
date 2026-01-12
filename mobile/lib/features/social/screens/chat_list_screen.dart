@@ -26,7 +26,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
     try {
       final prefs = await SharedPreferences.getInstance();
       _currentUserId = prefs.getInt('session_user_id') ?? 0;
-      
+
       if (_currentUserId > 0) {
         final chatList = await _messageRepo.getChatList(_currentUserId);
         setState(() {
@@ -90,7 +90,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   ],
                 ),
               ),
-              
+
               // Content
               Expanded(
                 child: Container(
@@ -128,14 +128,14 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Color(0xFF57BCCE),
+                  Color(0xFFA8D3CA),
                   Color(0xFFA8D3CA),
                 ],
               ),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF57BCCE).withOpacity(0.3),
+                  color: const Color(0xFFA8D3CA).withOpacity(0.3),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -153,7 +153,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF57BCCE),
+              color: Color(0xFFA8D3CA),
             ),
           ),
           const SizedBox(height: 8),
@@ -176,26 +176,27 @@ class _ChatListScreenState extends State<ChatListScreen> {
       itemBuilder: (context, index) {
         final chat = _chatList[index];
         final isUnread = chat['is_read'] == 0 && chat['is_sent_by_me'] == 0;
-        
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.grey[300]!,
-                          width: 1,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Colors.grey[300]!,
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
           child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             leading: CircleAvatar(
               radius: 24,
               backgroundColor: Colors.grey[400],
@@ -241,14 +242,16 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     color: Colors.grey[600],
                     fontSize: 14,
                     fontWeight: isUnread ? FontWeight.w500 : FontWeight.normal,
-                    fontStyle: chat['last_message'] == null ? FontStyle.italic : FontStyle.normal,
+                    fontStyle: chat['last_message'] == null
+                        ? FontStyle.italic
+                        : FontStyle.normal,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  chat['last_message_time'] != null 
+                  chat['last_message_time'] != null
                       ? _formatTime(chat['last_message_time'])
                       : 'Bạn bè',
                   style: TextStyle(
@@ -259,12 +262,41 @@ class _ChatListScreenState extends State<ChatListScreen> {
               ],
             ),
             onTap: () async {
+              // Parse và validate các giá trị trước khi truyền
+              // Backend trả về 'user_id' chứ không phải 'other_user_id'
+              final otherUserId = chat['user_id'];
+              final username = chat['username'];
+
+              // Kiểm tra và convert otherUserId sang int
+              int? parsedUserId;
+              if (otherUserId is int) {
+                parsedUserId = otherUserId;
+              } else if (otherUserId is String) {
+                parsedUserId = int.tryParse(otherUserId);
+              }
+
+              // Validate trước khi navigate
+              if (parsedUserId == null || parsedUserId <= 0) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text('Không thể mở chat: ID không hợp lệ')),
+                );
+                return;
+              }
+
+              if (_currentUserId <= 0) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Vui lòng đăng nhập lại')),
+                );
+                return;
+              }
+
               await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ChatDetailScreen(
-                    otherUserId: chat['other_user_id'],
-                    otherUsername: chat['username'],
+                    otherUserId: parsedUserId!,
+                    otherUsername: username ?? 'Unknown',
                     currentUserId: _currentUserId,
                   ),
                 ),

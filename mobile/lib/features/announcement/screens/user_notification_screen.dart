@@ -185,7 +185,7 @@ class _UserNotificationScreenState extends State<UserNotificationScreen> {
                       ? const Center(
                           child: CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(
-                                Color(0xFF57BCCE)),
+                                Color(0xFFA8D3CA)),
                           ),
                         )
                       : _announcements.isEmpty

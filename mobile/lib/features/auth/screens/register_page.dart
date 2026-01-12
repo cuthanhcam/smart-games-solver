@@ -65,15 +65,7 @@ class _RegisterPageState extends State<RegisterPage>
             margin: const EdgeInsets.symmetric(horizontal: 16),
             padding: const EdgeInsets.all(29),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF57BCCE),
-                  Color(0xFFA8D3CA),
-                  Color(0xFFDADCB7),
-                ],
-              ),
+              color: const Color(0xFF57BCCE),
               borderRadius: BorderRadius.circular(28),
               boxShadow: [
                 BoxShadow(
@@ -269,7 +261,7 @@ class _RegisterPageState extends State<RegisterPage>
     return Scaffold(
       body: Stack(
         children: [
-          // Background with gradient colors (replaced image background)
+          // Background with gradient colors (matched with login page)
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
@@ -277,24 +269,9 @@ class _RegisterPageState extends State<RegisterPage>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.green.shade100,
-                    Colors.teal.shade200,
-                  ],
-                ),
-              ),
-            ),
-          ),
-          // Overlay with accent gradient
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0x8057BCCE),
-                    Color(0x80A8D3CA),
-                    Color(0x80DADCB7),
+                    Color(0xFFE0F2FE), // Light blue
+                    Color(0xFFF0F9FF), // Very light blue
+                    Color(0xFFFDF4FF), // Very light purple
                   ],
                 ),
               ),
@@ -450,7 +427,7 @@ class _RegisterPageState extends State<RegisterPage>
                                           borderRadius:
                                               BorderRadius.circular(12),
                                           borderSide: const BorderSide(
-                                              color: Color(0xFF57BCCE),
+                                              color: Color(0xFF4299E1),
                                               width: 2),
                                         ),
                                         errorStyle: const TextStyle(
@@ -521,7 +498,7 @@ class _RegisterPageState extends State<RegisterPage>
                                               borderRadius:
                                                   BorderRadius.circular(12),
                                               borderSide: const BorderSide(
-                                                  color: Color(0xFF57BCCE),
+                                                  color: Color(0xFF4299E1),
                                                   width: 2),
                                             ),
                                             errorStyle: const TextStyle(
@@ -595,7 +572,7 @@ class _RegisterPageState extends State<RegisterPage>
                                               borderRadius:
                                                   BorderRadius.circular(12),
                                               borderSide: const BorderSide(
-                                                  color: Color(0xFF57BCCE),
+                                                  color: Color(0xFF4299E1),
                                                   width: 2),
                                             ),
                                             errorStyle: const TextStyle(
@@ -623,12 +600,7 @@ class _RegisterPageState extends State<RegisterPage>
                                     width: double.infinity,
                                     height: 56,
                                     decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        colors: [
-                                          Color(0xFF57BCCE),
-                                          Color(0xFFA8D3CA)
-                                        ],
-                                      ),
+                                      color: const Color(0xFF57BCCE),
                                       borderRadius: BorderRadius.circular(12),
                                       boxShadow: [
                                         BoxShadow(

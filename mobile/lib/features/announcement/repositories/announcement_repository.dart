@@ -188,10 +188,16 @@ class AnnouncementRepository {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return data['unread_count'] ?? 0;
+      } else if (response.statusCode == 401 || response.statusCode == 422) {
+        // User chưa đăng nhập hoặc token không hợp lệ
+        return 0;
       } else {
+        print(
+            'Error getting unread announcement count: ${response.statusCode}');
         return 0;
       }
     } catch (e) {
+      print('Exception getting unread announcement count: $e');
       return 0;
     }
   }

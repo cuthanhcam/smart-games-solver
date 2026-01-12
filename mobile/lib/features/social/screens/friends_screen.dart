@@ -258,15 +258,7 @@ class _FriendsScreenState extends State<FriendsScreen>
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF57BCCE),
-                  Color(0xFFA8D3CA),
-                  Color(0xFFDADCB7),
-                ],
-              ),
+        color: const Color(0xFF57BCCE),
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
@@ -294,14 +286,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Colors.white.withOpacity(0.3),
-                              Colors.white.withOpacity(0.1),
-                            ],
-                          ),
+                          color: Colors.white.withOpacity(0.2),
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: Colors.white.withOpacity(0.4),
@@ -499,6 +484,17 @@ class _FriendsScreenState extends State<FriendsScreen>
 
   // Mở chat với bạn bè
   void _openChat(int friendId, String friendUsername) {
+    // Validate trước khi navigate
+    if (_currentUserId <= 0) {
+      _showErrorSnackBar('Vui lòng đăng nhập lại');
+      return;
+    }
+
+    if (friendId <= 0) {
+      _showErrorSnackBar('Không thể mở chat: ID không hợp lệ');
+      return;
+    }
+
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -643,15 +639,7 @@ class _FriendsScreenState extends State<FriendsScreen>
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF57BCCE),
-              Color(0xFFA8D3CA),
-              Color(0xFFDADCB7),
-            ],
-          ),
+        color: const Color(0xFF57BCCE),
         ),
         child: SafeArea(
           child: FadeTransition(
@@ -832,15 +820,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                     return Container(
                       margin: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color(0xFF57BCCE),
-                            Color(0xFFA8D3CA),
-                            Color(0xFFDADCB7),
-                          ],
-                        ),
+                        color: const Color(0xFF57BCCE),
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(

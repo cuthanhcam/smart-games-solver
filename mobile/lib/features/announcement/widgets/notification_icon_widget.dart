@@ -70,6 +70,7 @@ class _NotificationIconWidgetState extends State<NotificationIconWidget> {
   }
 
   void _startTimer() {
+    // Chỉ start timer nếu đã có user ID (đã login)
     _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
       if (_currentUserId != null) {
         _loadUnreadCount();
