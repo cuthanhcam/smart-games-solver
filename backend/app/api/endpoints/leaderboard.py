@@ -69,11 +69,13 @@ async def get_leaderboard(
 
     try:
         repo = LeaderboardRepository(db)
+        # For 2048, don't filter by completed (only high scores matter)
+        should_filter_completed = completed_only and game_type != '2048'
         entries, total_count = repo.get_leaderboard(
             game_type=game_type,
             limit=limit,
             offset=offset,
-            completed_only=completed_only
+            completed_only=should_filter_completed
         )
 
         # Get current user's best score if authenticated

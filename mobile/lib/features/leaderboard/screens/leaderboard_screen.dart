@@ -237,7 +237,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
                             color: _selectedGame == game
-                                ? const Color(0xFF57BCCE)
+                                ? const Color(0xFFA8D3CA)
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -301,18 +301,18 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                               vertical: 8, horizontal: 16),
                           decoration: BoxDecoration(
                             color: _selectedDifficulty == diff
-                                ? const Color(0xFF57BCCE)
+                                ? const Color(0xFFA8D3CA)
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                               color: _selectedDifficulty == diff
-                                  ? const Color(0xFF57BCCE)
+                                  ? const Color(0xFFA8D3CA)
                                   : const Color(0xFFE2E8F0),
                             ),
                             boxShadow: _selectedDifficulty == diff
                                 ? [
                                     BoxShadow(
-                                      color: const Color(0xFF57BCCE)
+                                      color: const Color(0xFFA8D3CA)
                                           .withOpacity(0.3),
                                       blurRadius: 8,
                                       offset: const Offset(0, 4),
