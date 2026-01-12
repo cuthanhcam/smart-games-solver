@@ -43,34 +43,7 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
-# ============= Rubik Solver Schemas =============
-class FaceColors(BaseModel):
-    face_name: str = Field(..., pattern="^(front|back|left|right|top|bottom|U|R|F|D|L|B)$")
-    colors: List[List[str]] = Field(..., min_items=3, max_items=3)
 
-    @validator('colors')
-    def validate_colors(cls, v):
-        for row in v:
-            if len(row) != 3:
-                raise ValueError('Each row must have exactly 3 colors')
-            for color in row:
-                if color not in ['W', 'R', 'G', 'Y', 'B', 'O', 'w', 'r', 'g', 'y', 'b', 'o']:
-                    raise ValueError(f'Invalid color: {color}')
-        return v
-
-
-class RubikSolveRequest(BaseModel):
-    faces: List[FaceColors] = Field(..., min_items=6, max_items=6)
-    user_id: Optional[int] = None
-
-
-class RubikSolveResponse(BaseModel):
-    solution: str
-    steps_count: int
-    time_to_solve_ms: int
-    cube_state: str
-    success: bool
-    message: Optional[str] = None
 
 
 # ============= Game 2048 Schemas =============
@@ -97,7 +70,7 @@ class Game2048StateResponse(BaseModel):
 
 # ============= Sudoku Schemas =============
 class SudokuNewGameRequest(BaseModel):
-    difficulty: str = Field(..., pattern="^(easy|medium|hard)$")
+    difficulty: str = Field(..., pattern="^(easy|medium|hard|expert|normal)$")
     user_id: int
 
 
@@ -145,7 +118,7 @@ class CaroMoveRequest(BaseModel):
 
 class CaroAIMoveRequest(BaseModel):
     game_id: int
-    difficulty: str = Field(default="medium", pattern="^(easy|medium|hard)$")
+    difficulty: str = Field(default="medium", pattern="^(easy|medium|hard|expert|normal)$")
 
 
 class CaroGameStateResponse(BaseModel):
@@ -332,3 +305,60 @@ class UpdateAnnouncementRequest(BaseModel):
     content: Optional[str] = None
     type: Optional[str] = None
     is_active: Optional[bool] = None
+
+
+# ============= Game Score Save Schemas =============
+class Game2048SaveScoreRequest(BaseModel):
+    score: int
+    moves: Optional[int] = 0
+    won: bool = False
+
+
+
+class SudokuSaveScoreRequest(BaseModel):
+    difficulty: str
+    time_seconds: int
+    puzzle_id: Optional[int] = None
+    hints_used: Optional[int] = 0
+
+
+
+class CaroSaveScoreRequest(BaseModel):
+    difficulty: str
+    time_seconds: int
+    move_count: int
+    board_size: Optional[int] = 15
+    player_color: Optional[str] = "X"
+    opponent_type: Optional[str] = "ai"
+
+
+# ============= Leaderboard Schemas =============
+class LeaderboardEntryResponse(BaseModel):
+    rank: int
+    user_id: int
+    username: str
+    score: int
+    moves: Optional[int] = None
+    time_seconds: Optional[int] = None
+    completed: bool
+    created_at: datetime
+    game_data: Optional[dict] = None
+
+    class Config:
+        from_attributes = True
+
+
+class LeaderboardResponse(BaseModel):
+    game_type: str
+    entries: List[LeaderboardEntryResponse]
+    total_count: int
+    user_entry: Optional[LeaderboardEntryResponse] = None  # Current user's best entry
+
+
+class SaveGameScoreRequest(BaseModel):
+    game_type: str = Field(..., pattern="^(2048|sudoku|caro)$")
+    score: int
+    moves: Optional[int] = 0
+    time_seconds: Optional[int] = 0
+    completed: bool = False
+    game_data: Optional[dict] = None  # Additional game-specific data

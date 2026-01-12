@@ -9,7 +9,7 @@ from typing import List
 from ...core.database import get_db
 from ...core.dependencies import get_current_user, get_current_admin_user
 from ...models.user import User
-from ...models.game import Announcement
+from ...models.game import Announcement, AnnouncementRead, AnnouncementHidden
 from ...models.schemas import (
     CreateAnnouncementRequest,
     UpdateAnnouncementRequest,
@@ -179,3 +179,122 @@ async def deactivate_announcement(
     db.refresh(announcement)
 
     return AnnouncementResponse.from_orm(announcement)
+
+
+@router.post("/{announcement_id}/mark-read", status_code=status.HTTP_200_OK)
+async def mark_announcement_as_read(
+    announcement_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Mark an announcement as read for the current user
+    """
+    # Check if announcement exists
+    announcement = db.query(Announcement).filter(Announcement.id == announcement_id).first()
+    if not announcement:
+        raise HTTPException(status_code=404, detail="Announcement not found")
+
+    # Check if already marked as read
+    existing_read = db.query(AnnouncementRead).filter(
+        AnnouncementRead.user_id == current_user.id,
+        AnnouncementRead.announcement_id == announcement_id
+    ).first()
+
+    if existing_read:
+        return {"message": "Announcement already marked as read"}
+
+    # Create read record
+    read_record = AnnouncementRead(
+        user_id=current_user.id,
+        announcement_id=announcement_id
+    )
+    db.add(read_record)
+    db.commit()
+
+    return {"message": "Announcement marked as read"}
+
+
+@router.get("/{announcement_id}/is-read", status_code=status.HTTP_200_OK)
+async def check_announcement_read(
+    announcement_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Check if an announcement has been read by the current user
+    """
+    read_record = db.query(AnnouncementRead).filter(
+        AnnouncementRead.user_id == current_user.id,
+        AnnouncementRead.announcement_id == announcement_id
+    ).first()
+
+    return {"is_read": read_record is not None}
+
+
+@router.post("/{announcement_id}/hide", status_code=status.HTTP_200_OK)
+async def hide_announcement(
+    announcement_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Hide an announcement for the current user
+    """
+    # Check if announcement exists
+    announcement = db.query(Announcement).filter(Announcement.id == announcement_id).first()
+    if not announcement:
+        raise HTTPException(status_code=404, detail="Announcement not found")
+
+    # Check if already hidden
+    existing_hidden = db.query(AnnouncementHidden).filter(
+        AnnouncementHidden.user_id == current_user.id,
+        AnnouncementHidden.announcement_id == announcement_id
+    ).first()
+
+    if existing_hidden:
+        return {"message": "Announcement already hidden"}
+
+    # Create hidden record
+    hidden_record = AnnouncementHidden(
+        user_id=current_user.id,
+        announcement_id=announcement_id
+    )
+    db.add(hidden_record)
+    db.commit()
+
+    return {"message": "Announcement hidden"}
+
+
+@router.get("/unread-count", status_code=status.HTTP_200_OK)
+async def get_unread_count(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Get the count of unread announcements for the current user
+    """
+    # Get all active announcements
+    active_announcements = db.query(Announcement).filter(
+        Announcement.is_active == True
+    ).all()
+
+    # Get announcements that have been read by this user
+    read_announcement_ids = db.query(AnnouncementRead.announcement_id).filter(
+        AnnouncementRead.user_id == current_user.id
+    ).all()
+    read_ids = {r[0] for r in read_announcement_ids}
+
+    # Get announcements that have been hidden by this user
+    hidden_announcement_ids = db.query(AnnouncementHidden.announcement_id).filter(
+        AnnouncementHidden.user_id == current_user.id
+    ).all()
+    hidden_ids = {h[0] for h in hidden_announcement_ids}
+
+    # Count unread and not hidden
+    unread_count = sum(
+        1 for a in active_announcements
+        if a.id not in read_ids and a.id not in hidden_ids
+    )
+
+    return {"unread_count": unread_count}

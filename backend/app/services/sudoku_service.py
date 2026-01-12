@@ -315,7 +315,8 @@ class SudokuService:
         """
         # Calculate score based on time and hints
         base_score = 1000
-        difficulty_multiplier = {"easy": 1.0, "medium": 1.5, "hard": 2.0}
+        base_score = 1000
+        difficulty_multiplier = {"easy": 1.0, "medium": 1.5, "normal": 1.5, "hard": 2.0, "expert": 3.0}
         multiplier = difficulty_multiplier.get(difficulty, 1.0)
         
         # Deduct points for time (1 point per 5 seconds)
@@ -331,11 +332,16 @@ class SudokuService:
             "game_type": "sudoku",
             "score": final_score,
             "time_seconds": time_seconds,
-            "hints_used": hints_used,
-            "won": True
+            "moves": 0,  # Not tracked for Sudoku
+            "completed": True,
+            "game_data": {
+                "puzzle_id": puzzle_id,
+                "hints_used": hints_used,
+                "difficulty": difficulty
+            }
         }
         
-        saved_score = self.game_score_repository.create(score_data)
+        saved_score = self.game_score_repository.create(self.db, score_data)
         
         return {
             "id": saved_score.id,
@@ -344,8 +350,8 @@ class SudokuService:
             "difficulty": difficulty,
             "score": saved_score.score,
             "time_seconds": saved_score.time_seconds,
-            "hints_used": saved_score.hints_used,
-            "played_at": saved_score.played_at.isoformat()
+            "hints_used": hints_used,
+            "created_at": saved_score.created_at.isoformat()
         }
     
     def get_leaderboard(
@@ -363,23 +369,16 @@ class SudokuService:
         Returns:
             List of top scores
         """
-        scores = self.game_score_repository.get_leaderboard("sudoku", limit)
+        from ..repositories.leaderboard_repository import LeaderboardRepository
         
-        result = []
-        rank = 1
-        for score in scores:
-            result.append({
-                "rank": rank,
-                "user_id": score.user_id,
-                "username": score.user.username if score.user else "Anonymous",
-                "score": score.score,
-                "time_seconds": score.time_seconds,
-                "hints_used": score.hints_used,
-                "played_at": score.played_at.isoformat()
-            })
-            rank += 1
+        leaderboard_repo = LeaderboardRepository(self.db)
+        entries, total = leaderboard_repo.get_leaderboard(
+            game_type="sudoku",
+            limit=limit,
+            completed_only=True
+        )
         
-        return result
+        return entries
     
     def get_user_stats(self, user_id: int) -> Dict[str, Any]:
         """Get user's Sudoku statistics"""
@@ -412,7 +411,8 @@ class SudokuService:
             "difficulties": {
                 "easy": "30-35 pre-filled cells",
                 "medium": "25-30 pre-filled cells",
-                "hard": "20-25 pre-filled cells"
+                "hard": "20-25 pre-filled cells",
+                "expert": "17-20 pre-filled cells"
             },
             "scoring": {
                 "base": 1000,
@@ -421,7 +421,8 @@ class SudokuService:
                 "difficulty_multiplier": {
                     "easy": "×1.0",
                     "medium": "×1.5",
-                    "hard": "×2.0"
+                    "hard": "×2.0",
+                    "expert": "×3.0"
                 }
             },
             "tips": [

@@ -237,8 +237,8 @@ class CaroService:
                     if is_win:
                         return {"row": i, "col": j}
         
-        # 3. Hard: score-based move selection
-        if difficulty == "hard":
+        # 3. Hard/Expert: score-based move selection
+        if difficulty in ["hard", "expert"]:
             best_score = -float('inf')
             best_move = None
             
@@ -364,22 +364,16 @@ class CaroService:
     
     def get_leaderboard(self, limit: int = 10) -> List[Dict[str, Any]]:
         """Get Caro leaderboard"""
-        scores = self.game_score_repository.get_leaderboard("caro", limit)
+        from ..repositories.leaderboard_repository import LeaderboardRepository
         
-        result = []
-        rank = 1
-        for score in scores:
-            result.append({
-                "rank": rank,
-                "user_id": score.user_id,
-                "username": score.user.username if score.user else "Anonymous",
-                "score": score.score,
-                "wins": score.won,
-                "played_at": score.played_at.isoformat()
-            })
-            rank += 1
+        leaderboard_repo = LeaderboardRepository(self.db)
+        entries, total = leaderboard_repo.get_leaderboard(
+            game_type="caro",
+            limit=limit,
+            completed_only=True
+        )
         
-        return result
+        return entries
     
     def get_user_stats(self, user_id: int) -> Dict[str, Any]:
         """Get user's Caro statistics"""
@@ -436,4 +430,56 @@ class CaroService:
                 "Don't focus only on attack, defense is crucial",
                 "Practice pattern recognition"
             ]
+        }
+    def save_score(
+        self,
+        user_id: int,
+        moves: int,
+        board_size: int,
+        difficulty: str,
+        player_color: str,
+        opponent_type: str,
+        time_seconds: int = 0
+    ) -> Dict[str, Any]:
+        """
+        Save Caro game score to database
+        
+        Args:
+            user_id: User who played the game
+            moves: Total moves made
+            board_size: Board size used
+            difficulty: Game difficulty
+            player_color: Player's color (X or O)
+            opponent_type: Type of opponent (human or ai)
+            time_seconds: Time taken to complete the game
+        
+        Returns:
+            Saved score data
+        """
+        score_data = {
+            "user_id": user_id,
+            "game_type": "caro",
+            "score": 100 - moves,  # Lower moves = higher score
+            "moves": moves,
+            "time_seconds": time_seconds,
+            "completed": True,
+            "game_data": {
+                "board_size": board_size,
+                "difficulty": difficulty,
+                "player_color": player_color,
+                "opponent_type": opponent_type
+            }
+        }
+        
+        saved_score = self.game_score_repository.create(self.db, score_data)
+        
+        return {
+            "id": saved_score.id,
+            "user_id": saved_score.user_id,
+            "game_type": saved_score.game_type,
+            "score": saved_score.score,
+            "moves": saved_score.moves,
+            "time_seconds": saved_score.time_seconds,
+            "completed": saved_score.completed,
+            "created_at": saved_score.created_at.isoformat()
         }

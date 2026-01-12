@@ -27,22 +27,7 @@ class GameScore(Base):
         return f"<GameScore(id={self.id}, game_type='{self.game_type}', score={self.score})>"
 
 
-class RubikSolution(Base):
-    __tablename__ = "rubik_solutions"
 
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
-    cube_state = Column(Text, nullable=False)  # 54 character string
-    solution = Column(Text, nullable=False)  # Solution steps
-    steps_count = Column(Integer, nullable=False)
-    time_to_solve_ms = Column(Integer, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-
-    # Relationships
-    user = relationship("User", back_populates="rubik_solutions")
-
-    def __repr__(self):
-        return f"<RubikSolution(id={self.id}, steps_count={self.steps_count})>"
 
 
 class SudokuPuzzle(Base):
@@ -150,3 +135,29 @@ class Announcement(Base):
 
     def __repr__(self):
         return f"<Announcement(id={self.id}, title='{self.title}')>"
+
+
+class AnnouncementRead(Base):
+    """Track which announcements have been read by which users"""
+    __tablename__ = "announcement_reads"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    announcement_id = Column(Integer, ForeignKey("announcements.id", ondelete="CASCADE"), nullable=False, index=True)
+    read_at = Column(DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<AnnouncementRead(user_id={self.user_id}, announcement_id={self.announcement_id})>"
+
+
+class AnnouncementHidden(Base):
+    """Track which announcements have been hidden by which users"""
+    __tablename__ = "announcement_hidden"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    announcement_id = Column(Integer, ForeignKey("announcements.id", ondelete="CASCADE"), nullable=False, index=True)
+    hidden_at = Column(DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<AnnouncementHidden(user_id={self.user_id}, announcement_id={self.announcement_id})>"

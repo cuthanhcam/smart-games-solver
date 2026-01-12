@@ -252,10 +252,12 @@ class Game2048Service:
             "game_type": "2048",
             "score": score,
             "moves": moves,
-            "won": won
+            "completed": won,  # Use completed field instead of won
+            "time_seconds": 0,  # Not tracked for 2048
+            "game_data": {"won": won}  # Store won status in game_data
         }
         
-        saved_score = self.game_score_repository.create(score_data)
+        saved_score = self.game_score_repository.create(self.db, score_data)
         
         return {
             "id": saved_score.id,
@@ -263,8 +265,8 @@ class Game2048Service:
             "game_type": saved_score.game_type,
             "score": saved_score.score,
             "moves": saved_score.moves,
-            "won": saved_score.won,
-            "played_at": saved_score.played_at.isoformat()
+            "won": won,
+            "created_at": saved_score.created_at.isoformat()
         }
     
     def get_leaderboard(
@@ -282,23 +284,16 @@ class Game2048Service:
         Returns:
             List of top scores with user info
         """
-        scores = self.game_score_repository.get_leaderboard("2048", limit, time_range)
+        from ..repositories.leaderboard_repository import LeaderboardRepository
         
-        result = []
-        rank = 1
-        for score in scores:
-            result.append({
-                "rank": rank,
-                "user_id": score.user_id,
-                "username": score.user.username if score.user else "Anonymous",
-                "score": score.score,
-                "moves": score.moves,
-                "won": score.won,
-                "played_at": score.played_at.isoformat()
-            })
-            rank += 1
+        leaderboard_repo = LeaderboardRepository(self.db)
+        entries, total = leaderboard_repo.get_leaderboard(
+            game_type="2048",
+            limit=limit,
+            completed_only=False  # Show all scores for 2048
+        )
         
-        return result
+        return entries
     
     def get_user_stats(self, user_id: int) -> Dict[str, Any]:
         """

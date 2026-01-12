@@ -8,7 +8,7 @@ from sqlalchemy import func, desc
 from datetime import datetime
 
 from ..models.game import (
-    GameScore, RubikSolution, SudokuPuzzle, 
+    GameScore, SudokuPuzzle, 
     Game2048Session, CaroGame, UserActivityLog
 )
 from .base import BaseRepository
@@ -100,90 +100,7 @@ class GameScoreRepository(BaseRepository[GameScore, dict, dict]):
         ]
 
 
-class RubikSolutionRepository(BaseRepository[RubikSolution, dict, dict]):
-    """Repository cho Rubik solutions"""
-    
-    def __init__(self):
-        super().__init__(RubikSolution)
-    
-    def get_by_id(self, db: Session, id: int) -> Optional[RubikSolution]:
-        return db.query(RubikSolution).filter(RubikSolution.id == id).first()
-    
-    def get_all(
-        self, 
-        db: Session, 
-        skip: int = 0, 
-        limit: int = 100
-    ) -> List[RubikSolution]:
-        return db.query(RubikSolution).offset(skip).limit(limit).all()
-    
-    def create(self, db: Session, obj_in: dict) -> RubikSolution:
-        db_obj = RubikSolution(**obj_in)
-        db.add(db_obj)
-        db.commit()
-        db.refresh(db_obj)
-        return db_obj
-    
-    def update(
-        self, 
-        db: Session, 
-        db_obj: RubikSolution, 
-        obj_in: dict
-    ) -> RubikSolution:
-        for field, value in obj_in.items():
-            if hasattr(db_obj, field):
-                setattr(db_obj, field, value)
-        db.commit()
-        db.refresh(db_obj)
-        return db_obj
-    
-    def delete(self, db: Session, id: int) -> bool:
-        obj = self.get_by_id(db, id)
-        if obj:
-            db.delete(obj)
-            db.commit()
-            return True
-        return False
-    
-    def count(self, db: Session) -> int:
-        return db.query(func.count(RubikSolution.id)).scalar()
-    
-    def get_by_user(
-        self, 
-        db: Session, 
-        user_id: int,
-        limit: int = 10
-    ) -> List[RubikSolution]:
-        """Lấy lịch sử giải Rubik của user"""
-        return db.query(RubikSolution).filter(
-            RubikSolution.user_id == user_id
-        ).order_by(desc(RubikSolution.created_at)).limit(limit).all()
-    
-    def get_best_solutions(self, db: Session, limit: int = 10) -> List[dict]:
-        """Lấy các giải pháp tốt nhất (ít bước nhất)"""
-        from ..models.user import User
-        
-        results = db.query(
-            User.username,
-            func.min(RubikSolution.steps_count).label("best_steps"),
-            func.avg(RubikSolution.steps_count).label("avg_steps"),
-            func.count(RubikSolution.id).label("total_solves")
-        ).join(RubikSolution).group_by(
-            User.id, User.username
-        ).order_by(
-            func.min(RubikSolution.steps_count)
-        ).limit(limit).all()
-        
-        return [
-            {
-                "rank": idx + 1,
-                "username": r.username,
-                "best_steps": r.best_steps,
-                "avg_steps": round(r.avg_steps, 2),
-                "total_solves": r.total_solves
-            }
-            for idx, r in enumerate(results)
-        ]
+
 
 
 class SudokuPuzzleRepository(BaseRepository[SudokuPuzzle, dict, dict]):
@@ -247,5 +164,5 @@ class SudokuPuzzleRepository(BaseRepository[SudokuPuzzle, dict, dict]):
 
 # Singleton instances
 game_score_repository = GameScoreRepository()
-rubik_solution_repository = RubikSolutionRepository()
+
 sudoku_puzzle_repository = SudokuPuzzleRepository()
