@@ -1,4 +1,4 @@
-package com.example.rubik_cube_solver
+package com.example.mobile
 
 import io.flutter.embedding.android.FlutterActivity
 
