@@ -337,20 +337,18 @@ class UpdateAnnouncementRequest(BaseModel):
 # ============= Game Score Save Schemas =============
 class Game2048SaveScoreRequest(BaseModel):
     score: int
-    moves: int
+    moves: Optional[int] = 0
     won: bool = False
 
 
+
 class SudokuSaveScoreRequest(BaseModel):
-    puzzle_id: int
-    time_seconds: int
-    hints_used: int
     difficulty: str
+    time_seconds: int
+
 
 
 class CaroSaveScoreRequest(BaseModel):
-    moves: int
-    board_size: int
     difficulty: str
-    player_color: str  # "X" or "O"
-    opponent_type: str  # "human" or "ai"
+    time_seconds: int
+    move_count: int

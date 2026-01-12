@@ -235,6 +235,23 @@ class ApiClient {
     }
   }
 
+  Future<http.Response> save2048Score({required int score}) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse('$_baseUrl/games/2048/save-score'),
+            headers: await _getHeaders(),
+            body: jsonEncode({'score': score}),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      return response;
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+
   Future<http.Response> createSudokuGame(String difficulty) async {
     try {
       final response = await http
@@ -322,6 +339,29 @@ class ApiClient {
     }
   }
 
+  Future<http.Response> saveSudokuScore({
+    required String difficulty,
+    required int timeSeconds,
+  }) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse('$_baseUrl/games/sudoku/save-score'),
+            headers: await _getHeaders(),
+            body: jsonEncode({
+              'difficulty': difficulty,
+              'time_seconds': timeSeconds,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      return response;
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+
   Future<http.Response> getCaroLeaderboard({int limit = 10}) async {
     try {
       final response = await http
@@ -336,6 +376,31 @@ class ApiClient {
       throw Exception('Network error: $e');
     }
   }
+
+  Future<http.Response> saveCaroScore({
+    required String difficulty,
+    required int timeSeconds,
+    required int moveCount,
+  }) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse('$_baseUrl/games/caro/save-score'),
+            headers: await _getHeaders(),
+            body: jsonEncode({
+              'difficulty': difficulty,
+              'time_seconds': timeSeconds,
+              'move_count': moveCount,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      return response;
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
 
   Future<http.Response> createCaroGame() async {
     try {

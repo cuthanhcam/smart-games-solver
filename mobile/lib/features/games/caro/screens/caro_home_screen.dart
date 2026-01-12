@@ -270,14 +270,6 @@ class _CaroHomeScreenState extends State<CaroHomeScreen>
                                           color: Colors.white,
                                         ),
                                       ),
-                                      const SizedBox(height: 8),
-                                      const Text(
-                                        'Vì Tinh Tú',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.white70,
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 ),

@@ -1,5 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
+import '../../../shared/services/api_client.dart';
+
 
 class LeaderboardHelper {
   /// Gọi khi người chơi hoàn thành Sudoku: chỉ cập nhật nếu tốt hơn
@@ -21,6 +23,22 @@ class LeaderboardHelper {
         DateTime.now().toIso8601String(),
       );
       debugPrint('LEADERBOARD: new best Sudoku for $username/$diffLower = $timeSeconds s');
+      
+      // Save to backend
+      try {
+        final apiClient = ApiClient();
+        final response = await apiClient.saveSudokuScore(
+          difficulty: difficulty,
+          timeSeconds: timeSeconds,
+        );
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          debugPrint('LEADERBOARD: Successfully saved Sudoku score to backend');
+        } else {
+          debugPrint('LEADERBOARD: Failed to save Sudoku score to backend: ${response.statusCode}');
+        }
+      } catch (e) {
+        debugPrint('LEADERBOARD: Error saving Sudoku score to backend: $e');
+      }
     } else {
       debugPrint('LEADERBOARD: keep old best Sudoku ($prev s) for $username/$diffLower');
     }
@@ -59,6 +77,23 @@ class LeaderboardHelper {
     );
 
     debugPrint('LEADERBOARD: Saved Caro result for $username/$diffLower - Time: $timeSeconds s, Moves: $moveCount');
+    
+    // Save to backend
+    try {
+      final apiClient = ApiClient();
+      final response = await apiClient.saveCaroScore(
+        difficulty: difficulty,
+        timeSeconds: timeSeconds,
+        moveCount: moveCount,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        debugPrint('LEADERBOARD: Successfully saved Caro score to backend');
+      } else {
+        debugPrint('LEADERBOARD: Failed to save Caro score to backend: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('LEADERBOARD: Error saving Caro score to backend: $e');
+    }
   }
 
   /// Gọi khi người chơi hoàn thành 2048: chỉ cập nhật nếu điểm cao hơn
@@ -79,6 +114,19 @@ class LeaderboardHelper {
         DateTime.now().toIso8601String(),
       );
       debugPrint('LEADERBOARD: new best 2048 score for $username = $score');
+      
+      // Save to backend
+      try {
+        final apiClient = ApiClient();
+        final response = await apiClient.save2048Score(score: score);
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          debugPrint('LEADERBOARD: Successfully saved 2048 score to backend');
+        } else {
+          debugPrint('LEADERBOARD: Failed to save 2048 score to backend: ${response.statusCode}');
+        }
+      } catch (e) {
+        debugPrint('LEADERBOARD: Error saving 2048 score to backend: $e');
+      }
     } else {
       debugPrint('LEADERBOARD: keep old best 2048 score ($prev) for $username');
     }

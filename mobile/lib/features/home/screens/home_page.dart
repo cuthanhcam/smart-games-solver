@@ -244,94 +244,55 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: Stack(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // App Logo - Clickable to open drawer
-          Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            child: GestureDetector(
-              onTap: () {
-                _scaffoldKey.currentState?.openDrawer();
-              },
-              child: const AppLogo(size: 45),
-            ),
-          ),
-
-          // App Title - Always centered
-          Center(
-            child: ShaderMask(
-              shaderCallback: (bounds) => const LinearGradient(
-                colors: [
-                  Colors.white,
-                  Color(0xFF57BCCE),
-                  Colors.white,
-                ],
-                stops: [0.0, 0.5, 1.0],
-              ).createShader(bounds),
-              child: const Text(
-                'Vì Tinh Tú',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 1.2,
-                  shadows: [
-                    Shadow(
-                      offset: Offset(0, 2),
-                      blurRadius: 4,
-                      color: Colors.black26,
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          GestureDetector(
+            onTap: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
+            child: const AppLogo(size: 45),
           ),
 
           // Right side - Leaderboard for admin, Notifications for regular users
-          Positioned(
-            right: 0,
-            top: 0,
-            bottom: 0,
-            child: _isAdmin
-                ? GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LeaderboardScreen(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.yellow[50],
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.yellow.withOpacity(0.2),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+          _isAdmin
+              ? GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LeaderboardScreen(),
                       ),
-                      child: const Icon(Icons.emoji_events,
-                          color: Colors.amber, size: 24),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.yellow[50],
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.yellow.withOpacity(0.2),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                  )
-                : NotificationBadgeWidget(
-                    userId: 1,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const NotificationsScreen()),
-                      );
-                    },
+                    child: const Icon(Icons.emoji_events,
+                        color: Colors.amber, size: 24),
                   ),
-          ),
+                )
+              : NotificationBadgeWidget(
+                  userId: 1,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const NotificationsScreen()),
+                    );
+                  },
+                ),
         ],
       ),
     );
@@ -355,10 +316,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
       child: Column(
         children: [
-          // Clock Widget
-          const ClockWidget(),
-
-          const SizedBox(height: 16),
 
           // Greeting
           Text(
