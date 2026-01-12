@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../utils/caro/game_state.dart';
-import '../utils/caro/ai_service.dart';
-import '../widgets/caro/game_board.dart';
-import '../../../auth/services/auth_service.dart';
+import '../utils/game_state.dart';
+import '../utils/ai_service.dart';
+import '../utils/game_board.dart';
+import '../../../auth/repositories/auth_repository.dart';
+import '../../../leaderboard/screens/leaderboard_screen.dart';
+import '../../../leaderboard/utils/leaderboard_helper.dart';
+import '../../../profile/utils/user_activity_helper.dart';
 
-class CaroScreen extends StatefulWidget {
-  const CaroScreen({super.key});
+class GameScreen extends StatefulWidget {
+  final GameMode gameMode;
+  final Difficulty difficulty;
+
+  const GameScreen({
+    Key? key,
+    required this.gameMode,
+    required this.difficulty,
+  }) : super(key: key);
 
   @override
-  State<CaroScreen> createState() => _CaroScreenState();
+  State<GameScreen> createState() => _GameScreenState();
 }
 
-class _CaroScreenState extends State<CaroScreen> {
-  GameMode _gameMode = GameMode.pvE;
-  Difficulty _difficulty = Difficulty.normal;
+class _GameScreenState extends State<GameScreen> {
   late GameState gameState;
   List<int>? hintMove;
   bool isAIThinking = false;
@@ -31,100 +39,39 @@ class _CaroScreenState extends State<CaroScreen> {
   @override
   void initState() {
     super.initState();
-    _loadCurrentUser();
-    _showModeDialog();
-  }
-
-  Future<void> _showModeDialog() async {
-    final result = await showDialog<Map<String, dynamic>>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: const Text('Select Mode'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: const Text('Player vs AI'),
-              leading: const Icon(Icons.person),
-              onTap: () => Navigator.pop(context, {'mode': GameMode.pvE}),
-            ),
-            ListTile(
-              title: const Text('AI vs AI'),
-              leading: const Icon(Icons.computer),
-              onTap: () => Navigator.pop(context, {'mode': GameMode.evE}),
-            ),
-          ],
-        ),
-      ),
+    gameState = GameState.newGame(
+      mode: widget.gameMode,
+      difficulty: widget.difficulty,
     );
-
-    if (result == null) {
-      if (mounted) Navigator.pop(context);
-      return;
-    }
-
-    setState(() => _gameMode = result['mode']);
-
-    if (_gameMode == GameMode.pvE) {
-      await _showDifficultyDialog();
-    } else {
-      _startNewGame();
-    }
-  }
-
-  Future<void> _showDifficultyDialog() async {
-    final difficulty = await showDialog<Difficulty>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: const Text('Select Difficulty'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (var diff in Difficulty.values)
-              ListTile(
-                title: Text(_difficultyLabel(diff)),
-                onTap: () => Navigator.pop(context, diff),
-              ),
-          ],
-        ),
-      ),
-    );
-
-    if (difficulty == null) {
-      if (mounted) Navigator.pop(context);
-      return;
-    }
-
-    setState(() => _difficulty = difficulty);
-    _startNewGame();
-  }
-
-  void _startNewGame() {
-    setState(() {
-      _isInitializing = true;
-      gameState = GameState.newGame(mode: _gameMode, difficulty: _difficulty);
-      hintMove = null;
-      isAIThinking = false;
-      _lastAIMove = null;
-      _totalMoveCount = 0;
-    });
     _startElapsedTimer();
-
-    if (_gameMode == GameMode.evE) {
+    _initializeGame();
+    if (widget.gameMode == GameMode.evE) {
       _startAIvsAI();
     }
-    Future.delayed(const Duration(milliseconds: 150), () {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) setState(() => _isInitializing = false);
     });
   }
 
-  Future<void> _loadCurrentUser() async {
-    final user = authService.currentUser;
-    if (mounted) {
-      setState(() => _currentUsername = user?.username ?? 'Guest');
+  Future<void> _initializeGame() async {
+    await _loadCurrentUser();
+    await _saveGameEntry();
+  }
+
+  // Lưu lịch sử khi vào game
+  Future<void> _saveGameEntry() async {
+    try {
+      // Removed to avoid duplicate entries - game history is now saved from home_page.dart
+      debugPrint('Caro game entry - history already saved from home page');
+    } catch (e) {
+      debugPrint('Error saving caro game entry: $e');
     }
+  }
+
+  Future<void> _loadCurrentUser() async {
+    final repo = AuthRepository();
+    final user = await repo.getCurrentUser();
+    if (mounted) setState(() => _currentUsername = user?.username ?? 'Khách');
   }
 
   void _startElapsedTimer() {
@@ -165,7 +112,7 @@ class _CaroScreenState extends State<CaroScreen> {
 
   void _onCellTap(int row, int col) {
     if (gameState.gameOver || isAIThinking) return;
-    if (_gameMode == GameMode.evE) return;
+    if (widget.gameMode == GameMode.evE) return;
 
     setState(() {
       hintMove = null;
@@ -193,33 +140,23 @@ class _CaroScreenState extends State<CaroScreen> {
     // Sử dụng currentPlayer để xác định AI nào đang chơi
     final currentPlayer = gameState.currentPlayer;
     final move = AIService.getBestMoveWithDifficultyForPlayer(
-      gameState,
-      _difficulty,
-      currentPlayer,
-    );
+        gameState, widget.difficulty, currentPlayer);
     print('AI move for ${currentPlayer.name}: $move'); // Debug logging
     print(
-      'Current board state before move: ${gameState.board[0][0]}',
-    ); // Debug logging
+        'Current board state before move: ${gameState.board[0][0]}'); // Debug logging
 
     if (mounted) {
       setState(() {
         if (move[0] != -1 && move[1] != -1) {
           print(
-            'Making AI move at: ${move[0]}, ${move[1]} for ${currentPlayer.name}',
-          ); // Debug logging
-          final moveSuccess = gameState.makeMove(
-            move[0],
-            move[1],
-            currentPlayer,
-          );
+              'Making AI move at: ${move[0]}, ${move[1]} for ${currentPlayer.name}'); // Debug logging
+          final moveSuccess =
+              gameState.makeMove(move[0], move[1], currentPlayer);
           print('AI move success: $moveSuccess'); // Debug logging
           print(
-            'Board after move: ${gameState.board[move[0]][move[1]]}',
-          ); // Debug logging
+              'Board after move: ${gameState.board[move[0]][move[1]]}'); // Debug logging
           print(
-            'Game over: ${gameState.gameOver}, Winner: ${gameState.winner}',
-          ); // Debug logging
+              'Game over: ${gameState.gameOver}, Winner: ${gameState.winner}'); // Debug logging
           _lastAIMove = [move[0], move[1]];
           _totalMoveCount++;
           if (gameState.gameOver) {
@@ -235,7 +172,7 @@ class _CaroScreenState extends State<CaroScreen> {
   }
 
   void _showHint() {
-    if (gameState.gameOver || _gameMode == GameMode.evE) return;
+    if (gameState.gameOver || widget.gameMode == GameMode.evE) return;
 
     setState(() {
       hintMove = AIService.getHint(gameState);
@@ -287,7 +224,10 @@ class _CaroScreenState extends State<CaroScreen> {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [const Color(0xFF1E293B), const Color(0xFF334155)],
+                colors: [
+                  const Color(0xFF1E293B),
+                  const Color(0xFF334155),
+                ],
               ),
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
@@ -313,7 +253,7 @@ class _CaroScreenState extends State<CaroScreen> {
                     gradient: LinearGradient(
                       colors: gameState.winner == null
                           ? [Colors.grey.shade400, Colors.grey.shade600]
-                          : _gameMode == GameMode.evE
+                          : widget.gameMode == GameMode.evE
                               ? [Colors.blue.shade400, Colors.blue.shade600]
                               : (gameState.winner == Player.x
                                   ? [Colors.blue.shade400, Colors.blue.shade600]
@@ -332,7 +272,7 @@ class _CaroScreenState extends State<CaroScreen> {
                 Text(
                   gameState.winner == null
                       ? 'Hòa!'
-                      : _gameMode == GameMode.evE
+                      : widget.gameMode == GameMode.evE
                           ? 'Chiến thắng!'
                           : (gameState.winner == Player.x
                               ? 'Thắng cuộc!'
@@ -347,20 +287,26 @@ class _CaroScreenState extends State<CaroScreen> {
                 Text(
                   gameState.winner == null
                       ? 'Trận đấu hòa'
-                      : _gameMode == GameMode.evE
+                      : widget.gameMode == GameMode.evE
                           ? (gameState.winner == Player.x
                               ? 'Máy 1 thắng!'
                               : 'Máy 2 thắng!')
                           : (gameState.winner == Player.x
                               ? 'Bạn đã thắng!'
                               : 'Máy đã thắng!'),
-                  style: const TextStyle(fontSize: 18, color: Colors.white70),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.white70,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Tổng số lượt đi: $_totalMoveCount',
-                  style: const TextStyle(fontSize: 14, color: Colors.white60),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white60,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
@@ -408,7 +354,7 @@ class _CaroScreenState extends State<CaroScreen> {
                             gradient: LinearGradient(
                               colors: gameState.winner == null
                                   ? [Colors.blue.shade400, Colors.blue.shade600]
-                                  : _gameMode == GameMode.evE
+                                  : widget.gameMode == GameMode.evE
                                       ? [
                                           Colors.blue.shade400,
                                           Colors.blue.shade600
@@ -416,11 +362,11 @@ class _CaroScreenState extends State<CaroScreen> {
                                       : (gameState.winner == Player.x
                                           ? [
                                               Colors.blue.shade400,
-                                              Colors.blue.shade600,
+                                              Colors.blue.shade600
                                             ]
                                           : [
                                               Colors.red.shade400,
-                                              Colors.red.shade600,
+                                              Colors.red.shade600
                                             ]),
                             ),
                             borderRadius: BorderRadius.circular(16),
@@ -428,7 +374,7 @@ class _CaroScreenState extends State<CaroScreen> {
                               BoxShadow(
                                 color: gameState.winner == null
                                     ? Colors.blue.withOpacity(0.3)
-                                    : _gameMode == GameMode.evE
+                                    : widget.gameMode == GameMode.evE
                                         ? Colors.blue.withOpacity(0.3)
                                         : (gameState.winner == Player.x
                                             ? Colors.blue.withOpacity(0.3)
@@ -473,7 +419,25 @@ class _CaroScreenState extends State<CaroScreen> {
   }
 
   void _resetGame() async {
-    _startNewGame();
+    setState(() {
+      _isInitializing = true;
+      gameState = GameState.newGame(
+        mode: widget.gameMode,
+        difficulty: widget.difficulty,
+      );
+      hintMove = null;
+      isAIThinking = false;
+      _lastAIMove = null;
+      _totalMoveCount = 0;
+    });
+    _startElapsedTimer();
+
+    if (widget.gameMode == GameMode.evE) {
+      _startAIvsAI();
+    }
+    Future.delayed(const Duration(milliseconds: 150), () {
+      if (mounted) setState(() => _isInitializing = false);
+    });
   }
 
   String _formatElapsed(int seconds) {
@@ -503,7 +467,17 @@ class _CaroScreenState extends State<CaroScreen> {
   }
 
   void _saveGameResult() async {
-    // TODO: Save to backend if needed
+    try {
+      // Save Caro game result to leaderboard
+      await LeaderboardHelper.saveCaroResult(
+        username: _currentUsername,
+        difficulty: _difficultyLabel(widget.difficulty),
+        timeSeconds: _elapsedSeconds,
+        moveCount: _totalMoveCount,
+      );
+    } catch (e) {
+      debugPrint('Error saving Caro result: $e');
+    }
   }
 
   @override
@@ -515,7 +489,7 @@ class _CaroScreenState extends State<CaroScreen> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         title: Text(
-          _gameMode == GameMode.pvE ? 'Người vs Máy' : 'AI vs AI',
+          widget.gameMode == GameMode.pvE ? 'Người vs Máy' : 'AI vs AI',
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -523,7 +497,36 @@ class _CaroScreenState extends State<CaroScreen> {
           ),
         ),
         actions: [
-          // Leaderboard button removed - implement if needed
+          // Leaderboard button - styled like 2048
+          Container(
+            margin: const EdgeInsets.only(right: 8),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LeaderboardScreen(),
+                  ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF5F0E6), // Màu be nhạt như trong hình
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: const Icon(Icons.emoji_events,
+                    color: Color(0xFFFFD700), size: 24), // Màu vàng gold
+              ),
+            ),
+          ),
           // Refresh button
           Container(
             margin: const EdgeInsets.only(right: 8),
@@ -543,7 +546,10 @@ class _CaroScreenState extends State<CaroScreen> {
                     ),
                   ],
                 ),
-                child: const Icon(Icons.refresh, color: Colors.white),
+                child: const Icon(
+                  Icons.refresh,
+                  color: Colors.white,
+                ),
               ),
               onPressed: _resetGame,
             ),
@@ -609,7 +615,7 @@ class _CaroScreenState extends State<CaroScreen> {
                                   gradient: LinearGradient(
                                     colors: [
                                       Colors.red.shade400,
-                                      Colors.red.shade600,
+                                      Colors.red.shade600
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(12),
@@ -621,18 +627,15 @@ class _CaroScreenState extends State<CaroScreen> {
                                     ),
                                   ],
                                 ),
-                                child: const Icon(
-                                  Icons.close,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
+                                child: const Icon(Icons.close,
+                                    color: Colors.white, size: 20),
                               ),
                               const SizedBox(width: 12),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    _gameMode == GameMode.evE
+                                    widget.gameMode == GameMode.evE
                                         ? 'Máy 1'
                                         : _currentUsername,
                                     style: const TextStyle(
@@ -644,13 +647,11 @@ class _CaroScreenState extends State<CaroScreen> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    _gameMode == GameMode.evE
+                                    widget.gameMode == GameMode.evE
                                         ? 'AI Tấn công'
                                         : 'Người chơi',
                                     style: const TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 12,
-                                    ),
+                                        color: Colors.white70, fontSize: 12),
                                   ),
                                 ],
                               ),
@@ -664,7 +665,9 @@ class _CaroScreenState extends State<CaroScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    _gameMode == GameMode.evE ? 'Máy 2' : 'Máy',
+                                    widget.gameMode == GameMode.evE
+                                        ? 'Máy 2'
+                                        : 'Máy',
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
@@ -673,13 +676,11 @@ class _CaroScreenState extends State<CaroScreen> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    _gameMode == GameMode.evE
+                                    widget.gameMode == GameMode.evE
                                         ? 'AI Phòng thủ'
-                                        : '${_difficultyLabel(_difficulty)}',
+                                        : '${_difficultyLabel(widget.difficulty)}',
                                     style: const TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 12,
-                                    ),
+                                        color: Colors.white70, fontSize: 12),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
@@ -691,7 +692,7 @@ class _CaroScreenState extends State<CaroScreen> {
                                   gradient: LinearGradient(
                                     colors: [
                                       Colors.blue.shade400,
-                                      Colors.blue.shade600,
+                                      Colors.blue.shade600
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(12),
@@ -703,11 +704,8 @@ class _CaroScreenState extends State<CaroScreen> {
                                     ),
                                   ],
                                 ),
-                                child: const Icon(
-                                  Icons.circle_outlined,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
+                                child: const Icon(Icons.circle_outlined,
+                                    color: Colors.white, size: 20),
                               ),
                             ],
                           ),
@@ -723,9 +721,7 @@ class _CaroScreenState extends State<CaroScreen> {
                           // --- Số lượt đi ---
                           Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
+                                horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(20),
@@ -747,14 +743,12 @@ class _CaroScreenState extends State<CaroScreen> {
                           // --- Bộ đếm thời gian (Stopwatch style) ---
                           Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
+                                horizontal: 16, vertical: 8),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
                                   Colors.amber.shade400,
-                                  Colors.amber.shade600,
+                                  Colors.amber.shade600
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(20),
@@ -813,7 +807,7 @@ class _CaroScreenState extends State<CaroScreen> {
             ),
           ),
           // Action Buttons - 2 nút tròn ở cuối màn hình
-          if (_gameMode == GameMode.pvE && !gameState.gameOver)
+          if (widget.gameMode == GameMode.pvE && !gameState.gameOver)
             Positioned(
               bottom: 30,
               left: 0,
@@ -834,13 +828,13 @@ class _CaroScreenState extends State<CaroScreen> {
                               ? LinearGradient(
                                   colors: [
                                     Colors.grey.shade400,
-                                    Colors.grey.shade600,
+                                    Colors.grey.shade600
                                   ],
                                 )
                               : LinearGradient(
                                   colors: [
                                     Colors.orange.shade400,
-                                    Colors.orange.shade600,
+                                    Colors.orange.shade600
                                   ],
                                 ),
                           boxShadow: [
@@ -853,7 +847,11 @@ class _CaroScreenState extends State<CaroScreen> {
                             ),
                           ],
                         ),
-                        child: Icon(Icons.undo, color: Colors.white, size: 32),
+                        child: Icon(
+                          Icons.undo,
+                          color: Colors.white,
+                          size: 32,
+                        ),
                       ),
                     ),
                     // Hint Button
@@ -868,13 +866,13 @@ class _CaroScreenState extends State<CaroScreen> {
                               ? LinearGradient(
                                   colors: [
                                     Colors.grey.shade400,
-                                    Colors.grey.shade600,
+                                    Colors.grey.shade600
                                   ],
                                 )
                               : LinearGradient(
                                   colors: [
                                     Colors.green.shade400,
-                                    Colors.green.shade600,
+                                    Colors.green.shade600
                                   ],
                                 ),
                           boxShadow: [
@@ -908,14 +906,12 @@ class _CaroScreenState extends State<CaroScreen> {
                   child: Center(
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 16,
-                      ),
+                          horizontal: 24, vertical: 16),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
                             Colors.white.withOpacity(0.9),
-                            Colors.white.withOpacity(0.8),
+                            Colors.white.withOpacity(0.8)
                           ],
                         ),
                         borderRadius: BorderRadius.circular(20),
@@ -940,8 +936,7 @@ class _CaroScreenState extends State<CaroScreen> {
                             child: CircularProgressIndicator(
                               strokeWidth: 3,
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.blue.shade600,
-                              ),
+                                  Colors.blue.shade600),
                             ),
                           ),
                           const SizedBox(width: 16),
