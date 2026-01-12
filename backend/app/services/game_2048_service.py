@@ -255,7 +255,7 @@ class Game2048Service:
             "won": won
         }
         
-        saved_score = self.game_score_repository.create(score_data)
+        saved_score = self.game_score_repository.create(self.db, score_data)
         
         return {
             "id": saved_score.id,
