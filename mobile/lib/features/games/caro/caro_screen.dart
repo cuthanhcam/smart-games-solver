@@ -3,10 +3,10 @@ import 'dart:async';
 import 'game_state.dart';
 import 'ai_service.dart';
 import 'game_board.dart';
-import '../auth/repositories/auth_repository.dart';
-import '../leaderboard/screens/leaderboard_screen.dart';
-import '../leaderboard/utils/leaderboard_helper.dart';
-import '../profile/utils/user_activity_helper.dart';
+import '../../auth/repositories/auth_repository.dart';
+import '../../leaderboard/screens/leaderboard_screen.dart';
+import '../../leaderboard/utils/leaderboard_helper.dart';
+import '../../profile/utils/user_activity_helper.dart';
 
 class GameScreen extends StatefulWidget {
   final GameMode gameMode;
