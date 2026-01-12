@@ -160,7 +160,7 @@ class ApiClient {
     try {
       final response = await http
           .get(
-            Uri.parse('$_baseUrl/rubik/leaderboard?limit=$limit'),
+            Uri.parse('$_baseUrl/leaderboard/rubik?limit=$limit'),
             headers: await _getHeaders(),
           )
           .timeout(const Duration(seconds: 30));
@@ -224,7 +224,7 @@ class ApiClient {
     try {
       final response = await http
           .get(
-            Uri.parse('$_baseUrl/games/2048/leaderboard?limit=$limit'),
+            Uri.parse('$_baseUrl/leaderboard/2048?limit=$limit'),
             headers: await _getHeaders(),
           )
           .timeout(const Duration(seconds: 30));
@@ -328,7 +328,7 @@ class ApiClient {
     try {
       final response = await http
           .get(
-            Uri.parse('$_baseUrl/games/sudoku/leaderboard?limit=$limit'),
+            Uri.parse('$_baseUrl/leaderboard/sudoku?limit=$limit'),
             headers: await _getHeaders(),
           )
           .timeout(const Duration(seconds: 30));
@@ -366,7 +366,7 @@ class ApiClient {
     try {
       final response = await http
           .get(
-            Uri.parse('$_baseUrl/games/caro/leaderboard?limit=$limit'),
+            Uri.parse('$_baseUrl/leaderboard/caro?limit=$limit'),
             headers: await _getHeaders(),
           )
           .timeout(const Duration(seconds: 30));

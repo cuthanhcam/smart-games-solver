@@ -81,6 +81,11 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 
       for (final difficulty in _difficultiesUi) {
         final scores = data
+            .where((item) {
+              final gameData = item['game_data'] as Map<String, dynamic>?;
+              final diff = gameData?['difficulty']?.toString().toLowerCase();
+              return diff == difficulty.toLowerCase();
+            })
             .map((item) => {
                   'username': item['username']?.toString() ?? 'Unknown',
                   'time': _formatTime(item['time_seconds'] as int? ?? 0),
@@ -108,13 +113,18 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 
       for (final difficulty in _difficultiesUi) {
         final scores = data
+            .where((item) {
+              final gameData = item['game_data'] as Map<String, dynamic>?;
+              final diff = gameData?['difficulty']?.toString().toLowerCase();
+              return diff == difficulty.toLowerCase();
+            })
             .map((item) => {
                   'username': item['username']?.toString() ?? 'Unknown',
                   'time': _formatTime(item['score'] as int? ?? 0),
                   'completedAt': _formatDate(item['played_at']?.toString() ??
                       DateTime.now().toIso8601String()),
                   'durationSeconds': item['score'] as int? ?? 0,
-                  'moveCount': 0,
+                  'moveCount': item['moveCount'] ?? 0,
                 })
             .toList();
 

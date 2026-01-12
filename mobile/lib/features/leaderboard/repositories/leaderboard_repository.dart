@@ -18,8 +18,12 @@ class LeaderboardRepository {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final leaderboard = List<Map<String, dynamic>>.from(
-          (data['leaderboard'] as List?)
-                  ?.map((e) => Map<String, dynamic>.from(e)) ??
+          (data['entries'] as List?)?.map((e) {
+                final map = Map<String, dynamic>.from(e);
+                // Map backend fields to UI fields
+                map['played_at'] = map['created_at'];
+                return map;
+              }) ??
               [],
         );
         return leaderboard;
@@ -41,8 +45,13 @@ class LeaderboardRepository {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final leaderboard = List<Map<String, dynamic>>.from(
-          (data['leaderboard'] as List?)
-                  ?.map((e) => Map<String, dynamic>.from(e)) ??
+          (data['entries'] as List?)?.map((e) {
+                final map = Map<String, dynamic>.from(e);
+                // Map backend fields to UI fields
+                map['played_at'] = map['created_at'];
+                map['moveCount'] = map['moves'];
+                return map;
+              }) ??
               [],
         );
         return leaderboard;
@@ -64,8 +73,12 @@ class LeaderboardRepository {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final leaderboard = List<Map<String, dynamic>>.from(
-          (data['leaderboard'] as List?)
-                  ?.map((e) => Map<String, dynamic>.from(e)) ??
+          (data['entries'] as List?)?.map((e) {
+                final map = Map<String, dynamic>.from(e);
+                // Map backend fields to UI fields
+                map['played_at'] = map['created_at'];
+                return map;
+              }) ??
               [],
         );
         return leaderboard;
