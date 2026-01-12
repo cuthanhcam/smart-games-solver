@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../utils/caro/game_state.dart';
+import 'game_state.dart';
 
 class CellWidget extends StatefulWidget {
   final CellState cellState;

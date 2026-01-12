@@ -1,5 +1,5 @@
 import 'game_state.dart';
-import 'services/caro_ai_adapter.dart';
+import '../services/caro_ai_adapter.dart';
 import 'dart:math';
 
 class AIService {

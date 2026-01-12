@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../utils/game_state.dart';
 import '../utils/ai_service.dart';
-import '../utils/game_board.dart';
+import '../widgets/game_board.dart';
 import '../../../auth/repositories/auth_repository.dart';
 import '../../../leaderboard/screens/leaderboard_screen.dart';
 import '../../../leaderboard/utils/leaderboard_helper.dart';

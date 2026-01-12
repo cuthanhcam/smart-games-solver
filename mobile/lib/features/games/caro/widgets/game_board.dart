@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'game_state.dart';
-import 'cell_widget.dart';
-import 'grid_painter.dart';
+import '../utils/game_state.dart';
+import '../utils/cell_widget.dart';
+import '../utils/grid_painter.dart';
 
 class GameBoard extends StatefulWidget {
   final GameState gameState;
@@ -10,12 +10,12 @@ class GameBoard extends StatefulWidget {
   final List<int>? lastAIMove;
 
   const GameBoard({
-    Key? key,
+    super.key,
     required this.gameState,
     required this.onCellTap,
     this.hintMove,
     this.lastAIMove,
-  }) : super(key: key);
+  });
 
   @override
   State<GameBoard> createState() => _GameBoardState();
@@ -24,7 +24,8 @@ class GameBoard extends StatefulWidget {
 class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
-  final TransformationController _transformController = TransformationController();
+  final TransformationController _transformController =
+      TransformationController();
   bool _hasCenteredOnce = false;
 
   @override
@@ -34,13 +35,9 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.elasticOut,
-    ));
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
+    );
     _animationController.forward();
   }
 
@@ -54,7 +51,7 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final size = widget.gameState.board.length;
-    
+
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
@@ -106,9 +103,10 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
                         final row = index ~/ size;
                         final col = index % size;
                         final isWinningCell = widget.gameState.winningLine.any(
-                              (pos) => pos[0] == row && pos[1] == col,
+                          (pos) => pos[0] == row && pos[1] == col,
                         );
-                        final isHint = widget.hintMove != null &&
+                        final isHint =
+                            widget.hintMove != null &&
                             widget.hintMove![0] == row &&
                             widget.hintMove![1] == col;
 
@@ -117,7 +115,10 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
                           onTap: () => widget.onCellTap(row, col),
                           isWinningCell: isWinningCell,
                           isHint: isHint,
-                          isAIMove: widget.lastAIMove != null && widget.lastAIMove![0] == row && widget.lastAIMove![1] == col,
+                          isAIMove:
+                              widget.lastAIMove != null &&
+                              widget.lastAIMove![0] == row &&
+                              widget.lastAIMove![1] == col,
                           row: row,
                           col: col,
                           boardSize: size,

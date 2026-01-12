@@ -3,7 +3,7 @@ import 'gomoku_game.dart';
 import 'board.dart';
 import 'player.dart' as gomoku_player;
 import 'node.dart' as gomoku_node;
-import '../game_state.dart';
+import '../utils/game_state.dart';
 
 /// Adapter để tích hợp AI Gomoku vào game Caro hiện tại
 class CaroAIAdapter {
