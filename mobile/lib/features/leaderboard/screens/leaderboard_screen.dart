@@ -84,6 +84,9 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             .where((item) {
               final gameData = item['game_data'] as Map<String, dynamic>?;
               final diff = gameData?['difficulty']?.toString().toLowerCase();
+              if (difficulty == 'Normal') {
+                return diff == 'normal' || diff == 'medium';
+              }
               return diff == difficulty.toLowerCase();
             })
             .map((item) => {
@@ -116,6 +119,9 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             .where((item) {
               final gameData = item['game_data'] as Map<String, dynamic>?;
               final diff = gameData?['difficulty']?.toString().toLowerCase();
+              if (difficulty == 'Normal') {
+                return diff == 'normal' || diff == 'medium';
+              }
               return diff == difficulty.toLowerCase();
             })
             .map((item) => {

@@ -133,20 +133,7 @@ class HomeScreen extends StatelessWidget {
                           Navigator.pushNamed(context, '/caro');
                         },
                       ),
-                      _buildGameCard(
-                        context,
-                        title: 'Rubik Solver',
-                        icon: Icons.view_in_ar,
-                        color: Colors.purple,
-                        onTap: () {
-                          // TODO: Navigate to Rubik Solver
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Rubik Solver - Coming soon!'),
-                            ),
-                          );
-                        },
-                      ),
+
                     ],
                   ),
                 ),

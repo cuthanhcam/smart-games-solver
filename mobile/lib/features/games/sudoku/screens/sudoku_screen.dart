@@ -664,7 +664,7 @@ class _SudokuScreenState extends State<SudokuScreen>
                             });
                           }
                         },
-                        items: <String>['Easy', 'Medium', 'Hard', 'Expert']
+                        items: <String>['Easy', 'Normal', 'Hard', 'Expert']
                             .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,

@@ -24,7 +24,7 @@ class User(Base):
 
     # Relationships
     game_scores = relationship("GameScore", back_populates="user", cascade="all, delete-orphan")
-    rubik_solutions = relationship("RubikSolution", back_populates="user", cascade="all, delete-orphan")
+
     activity_logs = relationship("UserActivityLog", back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self):

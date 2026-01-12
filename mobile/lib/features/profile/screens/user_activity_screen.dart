@@ -758,16 +758,26 @@ class _UserActivityScreenState extends State<UserActivityScreen>
                                 Container(
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 16),
+                                  padding: const EdgeInsets.all(4),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.2),
+                                    color: Colors.black.withOpacity(0.2), // Darker background for contrast
                                     borderRadius: BorderRadius.circular(25),
                                   ),
                                   child: TabBar(
                                     controller: _tabController,
                                     indicator: BoxDecoration(
                                       color: Colors.white,
-                                      borderRadius: BorderRadius.circular(25),
+                                      borderRadius: BorderRadius.circular(21), // Slightly smaller radius
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
                                     ),
+                                    indicatorSize: TabBarIndicatorSize.tab,
+                                    dividerColor: Colors.transparent,
                                     labelColor: const Color(0xFF2D3748),
                                     unselectedLabelColor: Colors.white,
                                     labelStyle: const TextStyle(

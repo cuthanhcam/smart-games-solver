@@ -125,51 +125,7 @@ class ApiClient {
   }
 
   // Game endpoints
-  Future<http.Response> solveRubik(String cubeState) async {
-    try {
-      final response = await http
-          .post(
-            Uri.parse('$_baseUrl/rubik/solve'),
-            headers: await _getHeaders(),
-            body: jsonEncode({'cube_state': cubeState}),
-          )
-          .timeout(const Duration(seconds: 60));
 
-      return response;
-    } catch (e) {
-      throw Exception('Network error: $e');
-    }
-  }
-
-  Future<http.Response> getRubikHistory({int skip = 0, int limit = 10}) async {
-    try {
-      final response = await http
-          .get(
-            Uri.parse('$_baseUrl/rubik/history?skip=$skip&limit=$limit'),
-            headers: await _getHeaders(),
-          )
-          .timeout(const Duration(seconds: 30));
-
-      return response;
-    } catch (e) {
-      throw Exception('Network error: $e');
-    }
-  }
-
-  Future<http.Response> getRubikLeaderboard({int limit = 10}) async {
-    try {
-      final response = await http
-          .get(
-            Uri.parse('$_baseUrl/leaderboard/rubik?limit=$limit'),
-            headers: await _getHeaders(),
-          )
-          .timeout(const Duration(seconds: 30));
-
-      return response;
-    } catch (e) {
-      throw Exception('Network error: $e');
-    }
-  }
 
   Future<http.Response> create2048Game() async {
     try {
@@ -349,7 +305,7 @@ class ApiClient {
             Uri.parse('$_baseUrl/games/sudoku/save-score'),
             headers: await _getHeaders(),
             body: jsonEncode({
-              'difficulty': difficulty,
+              'difficulty': difficulty.toLowerCase(),
               'time_seconds': timeSeconds,
             }),
           )
@@ -388,7 +344,7 @@ class ApiClient {
             Uri.parse('$_baseUrl/games/caro/save-score'),
             headers: await _getHeaders(),
             body: jsonEncode({
-              'difficulty': difficulty,
+              'difficulty': difficulty.toLowerCase(),
               'time_seconds': timeSeconds,
               'move_count': moveCount,
             }),

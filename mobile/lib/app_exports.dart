@@ -56,7 +56,6 @@ export 'features/games/caro/repositories/caro_repository.dart';
 export 'features/games/sudoku/screens/sudoku_screen.dart';
 export 'features/games/sudoku/services/sudoku_service.dart';
 export 'features/games/sudoku/repositories/sudoku_repository.dart';
-export 'features/games/rubik/repositories/rubik_repository.dart';
 
 // Feature exports - Leaderboard
 export 'features/leaderboard/screens/leaderboard_screen.dart';

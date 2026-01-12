@@ -237,8 +237,8 @@ class CaroService:
                     if is_win:
                         return {"row": i, "col": j}
         
-        # 3. Hard: score-based move selection
-        if difficulty == "hard":
+        # 3. Hard/Expert: score-based move selection
+        if difficulty in ["hard", "expert"]:
             best_score = -float('inf')
             best_move = None
             

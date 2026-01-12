@@ -315,7 +315,8 @@ class SudokuService:
         """
         # Calculate score based on time and hints
         base_score = 1000
-        difficulty_multiplier = {"easy": 1.0, "medium": 1.5, "hard": 2.0}
+        base_score = 1000
+        difficulty_multiplier = {"easy": 1.0, "medium": 1.5, "normal": 1.5, "hard": 2.0, "expert": 3.0}
         multiplier = difficulty_multiplier.get(difficulty, 1.0)
         
         # Deduct points for time (1 point per 5 seconds)
@@ -410,7 +411,8 @@ class SudokuService:
             "difficulties": {
                 "easy": "30-35 pre-filled cells",
                 "medium": "25-30 pre-filled cells",
-                "hard": "20-25 pre-filled cells"
+                "hard": "20-25 pre-filled cells",
+                "expert": "17-20 pre-filled cells"
             },
             "scoring": {
                 "base": 1000,
@@ -419,7 +421,8 @@ class SudokuService:
                 "difficulty_multiplier": {
                     "easy": "×1.0",
                     "medium": "×1.5",
-                    "hard": "×2.0"
+                    "hard": "×2.0",
+                    "expert": "×3.0"
                 }
             },
             "tips": [

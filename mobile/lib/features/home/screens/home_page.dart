@@ -10,7 +10,7 @@ import '../../../shared/widgets/game_bg.dart';
 import '../../../shared/widgets/gradient_snackbar.dart';
 import '../../profile/utils/user_activity_helper.dart';
 import '../../games/sudoku/screens/sudoku_screen.dart';
-import '../../games/rubik/screens/rubik_main.dart';
+
 import '../../leaderboard/screens/leaderboard_screen.dart';
 import '../../profile/screens/user_activity_screen.dart';
 import '../../social/screens/friends_screen.dart';
@@ -524,7 +524,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           _buildGameCard(
             title: 'Sudoku',
             subtitle: 'Rèn luyện trí tuệ mỗi ngày!',
-            icon: _buildSudokuIcon(),
+            icon: const Icon(Icons.grid_on, color: Colors.white, size: 32),
             backgroundColor: const Color(0xFF57BCCE),
             onTap: () {
               _showSudokuDialog(context);
@@ -541,7 +541,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           _buildGameCard(
             title: '2048',
             subtitle: 'Trượt số, nhân đôi niềm vui!',
-            icon: _build2048Icon(),
+            icon: const Icon(Icons.apps, color: Colors.white, size: 32),
             backgroundColor: const Color(0xFFE67E22),
             onTap: () {
               _show2048Dialog(context);
@@ -555,7 +555,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           _buildGameCard(
             title: 'Caro',
             subtitle: 'Đấu trí từng nước cờ!',
-            icon: _buildCaroIcon(),
+            icon: const Icon(Icons.close, color: Colors.white, size: 32),
             backgroundColor: const Color(0xFF2C3E50),
             onTap: () {
               _showCaroDialog(context);
@@ -565,23 +565,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Navigator.pushNamed(context, '/caro');
             },
           ),
-          const SizedBox(height: 12),
-          _buildGameCard(
-            title: 'Rubik',
-            subtitle: 'Giải đố 3D thử thách!',
-            icon: _buildRubikIcon(),
-            backgroundColor: const Color(0xFF8E44AD),
-            onTap: () {
-              _showRubikDialog(context);
-            },
-            onPlayTap: () async {
-              await _saveGameHistory('rubik');
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => RubikMain()),
-              );
-            },
-          ),
+
         ],
       ),
     );
@@ -687,78 +671,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSudokuIcon() {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(4),
-        child: Image.asset(
-          'assets/images/sudoku_icon.jpg',
-          width: 40,
-          height: 40,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
 
-  Widget _build2048Icon() {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(4),
-        child: Image.asset(
-          'assets/images/g2048_icon.jpg',
-          width: 40,
-          height: 40,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
 
-  Widget _buildCaroIcon() {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(4),
-        child: Image.asset(
-          'assets/images/caro_icon.jpg',
-          width: 40,
-          height: 40,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
 
-  Widget _buildRubikIcon() {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-        color: const Color(0xFF8E44AD),
-      ),
-      child: const Icon(
-        Icons.view_in_ar,
-        color: Colors.white,
-        size: 24,
-      ),
-    );
-  }
 
   void _showGameDescriptionDialog(
     BuildContext context,
@@ -892,12 +807,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
-                  child: Image.asset(
-                    'assets/images/sudoku_icon.jpg',
-                    width: 30,
-                    height: 30,
-                    fit: BoxFit.cover,
-                  ),
+                  child: const Icon(Icons.grid_on, color: Colors.white, size: 20),
                 ),
               ),
               const SizedBox(width: 12),
@@ -991,12 +901,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
-                  child: Image.asset(
-                    'assets/images/g2048_icon.jpg',
-                    width: 30,
-                    height: 30,
-                    fit: BoxFit.cover,
-                  ),
+                  child: const Icon(Icons.apps, color: Colors.white, size: 20),
                 ),
               ),
               const SizedBox(width: 12),
@@ -1090,12 +995,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
-                  child: Image.asset(
-                    'assets/images/caro_icon.jpg',
-                    width: 30,
-                    height: 30,
-                    fit: BoxFit.cover,
-                  ),
+                  child: const Icon(Icons.close, color: Colors.white, size: 20),
                 ),
               ),
               const SizedBox(width: 12),
@@ -1168,100 +1068,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  void _showRubikDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF8E44AD),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 8,
-          title: Row(
-            children: [
-              Container(
-                width: 30,
-                height: 30,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: const Icon(
-                  Icons.view_in_ar,
-                  color: Colors.white,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              const Expanded(
-                child: Text(
-                  'Rubik Cube',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Text(
-                    'Trò chơi giải đố 3D kinh điển. Xoay các mặt để đưa cube về trạng thái đã giải.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white,
-                      height: 1.5,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Cách chơi:',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  '• Drag để xoay cube 3D\n• Tap mặt để xoay mặt cụ thể\n• Nhập cách giải bằng ký hiệu F, R, U, D, L, B\n• Sử dụng \' cho ngược chiều',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                    height: 1.5,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white70,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              ),
-              child: const Text('Đóng'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+
 
   // User Drawer
   Widget _buildUserDrawer() {
@@ -1532,44 +1339,47 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
         const SizedBox(height: 16),
 
-        // Game Icons Row
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildGameIconButton(
-                icon: _buildSudokuIcon(),
-                backgroundColor: const Color(0xFF57BCCE).withOpacity(0.8),
-                onTap: () async {
-                  await _saveGameHistory('sudoku');
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SudokuScreen()),
-                  );
-                },
-              ),
-              _buildGameIconButton(
-                icon: _build2048Icon(),
-                backgroundColor: const Color(0xFF4A90E2).withOpacity(0.8),
-                onTap: () async {
-                  await _saveGameHistory('2048');
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/2048');
-                },
-              ),
-              _buildGameIconButton(
-                icon: _buildCaroIcon(),
-                backgroundColor: const Color(0xFFE74C3C).withOpacity(0.8),
-                onTap: () async {
-                  await _saveGameHistory('caro');
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/caro');
-                },
-              ),
-            ],
-          ),
+        // Game Cards
+        _buildDrawerGameCard(
+          title: 'Sudoku',
+          icon: Icons.grid_on,
+          backgroundColor: Colors.white.withOpacity(0.5),
+          iconColor: Colors.black,
+          textColor: Colors.black,
+          onTap: () async {
+            await _saveGameHistory('sudoku');
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const SudokuScreen()),
+            );
+          },
+        ),
+
+        _buildDrawerGameCard(
+          title: '2048',
+          icon: Icons.apps,
+          backgroundColor: Colors.white.withOpacity(0.5),
+          iconColor: Colors.black,
+          textColor: Colors.black,
+          onTap: () async {
+            await _saveGameHistory('2048');
+            Navigator.pop(context);
+            Navigator.pushNamed(context, '/2048');
+          },
+        ),
+
+        _buildDrawerGameCard(
+          title: 'Caro',
+          icon: Icons.close,
+          backgroundColor: Colors.white.withOpacity(0.5),
+          iconColor: Colors.black,
+          textColor: Colors.black,
+          onTap: () async {
+            await _saveGameHistory('caro');
+            Navigator.pop(context);
+            Navigator.pushNamed(context, '/caro');
+          },
         ),
       ],
     );
@@ -1676,21 +1486,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           },
         ),
 
-        _buildDrawerGameCard(
-          title: 'Rubik',
-          icon: Icons.view_in_ar,
-          backgroundColor: Colors.white.withOpacity(0.5),
-          iconColor: Colors.black,
-          textColor: Colors.black,
-          onTap: () async {
-            await _saveGameHistory('rubik');
-            Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => RubikMain()),
-            );
-          },
-        ),
+
       ],
     );
   }
@@ -1774,7 +1570,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
         _buildUtilityCard(
           title: 'Bảng xếp hạng',
-          icon: Icons.bar_chart,
+          icon: Icons.leaderboard,
           backgroundColor: const Color(0xFF9B59B6).withOpacity(0.8),
           onTap: () async {
             await Future.delayed(const Duration(milliseconds: 100));

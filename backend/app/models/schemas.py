@@ -43,34 +43,7 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
-# ============= Rubik Solver Schemas =============
-class FaceColors(BaseModel):
-    face_name: str = Field(..., pattern="^(front|back|left|right|top|bottom|U|R|F|D|L|B)$")
-    colors: List[List[str]] = Field(..., min_items=3, max_items=3)
 
-    @validator('colors')
-    def validate_colors(cls, v):
-        for row in v:
-            if len(row) != 3:
-                raise ValueError('Each row must have exactly 3 colors')
-            for color in row:
-                if color not in ['W', 'R', 'G', 'Y', 'B', 'O', 'w', 'r', 'g', 'y', 'b', 'o']:
-                    raise ValueError(f'Invalid color: {color}')
-        return v
-
-
-class RubikSolveRequest(BaseModel):
-    faces: List[FaceColors] = Field(..., min_items=6, max_items=6)
-    user_id: Optional[int] = None
-
-
-class RubikSolveResponse(BaseModel):
-    solution: str
-    steps_count: int
-    time_to_solve_ms: int
-    cube_state: str
-    success: bool
-    message: Optional[str] = None
 
 
 # ============= Game 2048 Schemas =============
@@ -97,7 +70,7 @@ class Game2048StateResponse(BaseModel):
 
 # ============= Sudoku Schemas =============
 class SudokuNewGameRequest(BaseModel):
-    difficulty: str = Field(..., pattern="^(easy|medium|hard)$")
+    difficulty: str = Field(..., pattern="^(easy|medium|hard|expert|normal)$")
     user_id: int
 
 
@@ -145,7 +118,7 @@ class CaroMoveRequest(BaseModel):
 
 class CaroAIMoveRequest(BaseModel):
     game_id: int
-    difficulty: str = Field(default="medium", pattern="^(easy|medium|hard)$")
+    difficulty: str = Field(default="medium", pattern="^(easy|medium|hard|expert|normal)$")
 
 
 class CaroGameStateResponse(BaseModel):

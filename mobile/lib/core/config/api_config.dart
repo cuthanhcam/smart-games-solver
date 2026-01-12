@@ -16,7 +16,7 @@ class ApiConfig {
   // Endpoints
   static const String auth = '/auth';
   static const String games = '/games';
-  static const String rubik = '/rubik';
+
 
   // Auth endpoints
   static String get register => '$apiUrl$auth/register';
@@ -24,10 +24,7 @@ class ApiConfig {
   static String get logout => '$apiUrl$auth/logout';
   static String get currentUser => '$apiUrl$auth/me';
 
-  // Rubik endpoints
-  static String get rubikSolve => '$apiUrl$rubik/solve';
-  static String get rubikHistory => '$apiUrl$rubik/history';
-  static String get rubikLeaderboard => '$apiUrl$rubik/leaderboard';
+
 
   // Game 2048 endpoints
   static String get game2048 => '$apiUrl$games/2048';
