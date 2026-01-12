@@ -207,6 +207,19 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     );
   }
 
+  String _formatDateTime(String dateTimeStr) {
+    try {
+      // Parse UTC datetime
+      final utcDateTime = DateTime.parse(dateTimeStr);
+      // Convert to Vietnam timezone (UTC+7)
+      final vietnamDateTime = utcDateTime.add(const Duration(hours: 7));
+      // Format: dd/MM/yyyy HH:mm
+      return DateFormat('dd/MM/yyyy HH:mm').format(vietnamDateTime);
+    } catch (e) {
+      return dateTimeStr;
+    }
+  }
+
   void _showAnnouncementDetail(Announcement announcement) {
     showDialog(
       context: context,
@@ -270,9 +283,12 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                     children: [
                       Icon(Icons.person, size: 16, color: Colors.grey[600]),
                       const SizedBox(width: 8),
-                      Text('Người tạo: ${announcement.createdBy}',
-                          style:
-                              TextStyle(fontSize: 14, color: Colors.grey[600])),
+                      Flexible(
+                        child: Text(
+                            'Người tạo: ${announcement.adminId != null ? 'Admin #${announcement.adminId}' : 'Admin'}',
+                            style: TextStyle(
+                                fontSize: 14, color: Colors.grey[600])),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -281,9 +297,14 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                       Icon(Icons.access_time,
                           size: 16, color: Colors.grey[600]),
                       const SizedBox(width: 8),
-                      Text('Ngày tạo: ${announcement.createdAt}',
+                      Flexible(
+                        child: Text(
+                          'Ngày tạo: ${_formatDateTime(announcement.createdAt)}',
                           style:
-                              TextStyle(fontSize: 14, color: Colors.grey[600])),
+                              TextStyle(fontSize: 14, color: Colors.grey[600]),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -580,7 +601,9 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                                               ),
                                               const SizedBox(width: 4),
                                               Text(
-                                                announcement.createdBy,
+                                                announcement.adminId != null
+                                                    ? 'Admin #${announcement.adminId}'
+                                                    : 'Admin',
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   color: Colors.grey[600],
@@ -595,7 +618,8 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                                               const SizedBox(width: 4),
                                               Flexible(
                                                 child: Text(
-                                                  announcement.createdAt,
+                                                  _formatDateTime(
+                                                      announcement.createdAt),
                                                   style: TextStyle(
                                                     fontSize: 12,
                                                     color: Colors.grey[600],

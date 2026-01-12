@@ -1,78 +1,70 @@
 class Announcement {
   final int? id;
+  final int? adminId;
   final String title;
   final String content;
+  final String type;
   final String createdAt;
-  final String createdBy;
+  final String? updatedAt;
   final bool isActive;
-  // final int displayDurationMinutes; // Đã bỏ chức năng thời gian hiển thị
 
   Announcement({
     this.id,
+    this.adminId,
     required this.title,
     required this.content,
+    required this.type,
     required this.createdAt,
-    required this.createdBy,
+    this.updatedAt,
     this.isActive = true,
-    // this.displayDurationMinutes = 2, // Đã bỏ chức năng
   });
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'admin_id': adminId,
       'title': title,
       'content': content,
+      'type': type,
       'created_at': createdAt,
-      'created_by': createdBy,
-      'is_active': isActive ? 1 : 0,
-      // 'display_duration_minutes': displayDurationMinutes, // Đã bỏ chức năng
+      'updated_at': updatedAt,
+      'is_active': isActive,
     };
   }
 
   factory Announcement.fromMap(Map<String, dynamic> map) {
     return Announcement(
       id: map['id'],
-      title: map['title'],
-      content: map['content'],
-      createdAt: map['created_at'],
-      createdBy: map['created_by'],
-      isActive: map['is_active'] == 1,
-      // displayDurationMinutes: map['display_duration_minutes'] ?? 2, // Đã bỏ chức năng
+      adminId: map['admin_id'],
+      title: map['title'] ?? '',
+      content: map['content'] ?? '',
+      type: map['type'] ?? 'info',
+      createdAt:
+          map['created_at']?.toString() ?? DateTime.now().toIso8601String(),
+      updatedAt: map['updated_at']?.toString(),
+      isActive: map['is_active'] == true || map['is_active'] == 1,
     );
   }
 
   Announcement copyWith({
     int? id,
+    int? adminId,
     String? title,
     String? content,
+    String? type,
     String? createdAt,
-    String? createdBy,
+    String? updatedAt,
     bool? isActive,
-    // int? displayDurationMinutes, // Đã bỏ chức năng
   }) {
     return Announcement(
       id: id ?? this.id,
+      adminId: adminId ?? this.adminId,
       title: title ?? this.title,
       content: content ?? this.content,
+      type: type ?? this.type,
       createdAt: createdAt ?? this.createdAt,
-      createdBy: createdBy ?? this.createdBy,
+      updatedAt: updatedAt ?? this.updatedAt,
       isActive: isActive ?? this.isActive,
-      // displayDurationMinutes: displayDurationMinutes ?? this.displayDurationMinutes, // Đã bỏ chức năng
     );
   }
-
-  // Kiểm tra thông báo có hết hạn không - Đã bỏ chức năng
-  // bool get isExpired {
-  //   final createdTime = DateTime.parse(createdAt);
-  //   final expiryTime = createdTime.add(Duration(minutes: displayDurationMinutes));
-  //   return DateTime.now().isAfter(expiryTime);
-  // }
-
-  // Thời gian còn lại (phút) - Đã bỏ chức năng
-  // int get remainingMinutes {
-  //   final createdTime = DateTime.parse(createdAt);
-  //   final expiryTime = createdTime.add(Duration(minutes: displayDurationMinutes));
-  //   final remaining = expiryTime.difference(DateTime.now()).inMinutes;
-  //   return remaining > 0 ? remaining : 0;
-  // }
 }

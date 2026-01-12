@@ -141,8 +141,11 @@ class AnnouncementRepository {
   // Ẩn thông báo cho user
   Future<void> hideAnnouncementForUser(int userId, int announcementId) async {
     try {
-      // Note: This would need a backend endpoint if needed
-      // For now, this is a placeholder
+      final response = await _apiClient.hideAnnouncement(announcementId);
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to hide announcement');
+      }
     } catch (e) {
       rethrow;
     }
@@ -151,9 +154,14 @@ class AnnouncementRepository {
   // Kiểm tra thông báo đã đọc chưa
   Future<bool> isAnnouncementReadByUser(int userId, int announcementId) async {
     try {
-      // Note: This would need a backend endpoint if needed
-      // For now, returning false as default
-      return false;
+      final response = await _apiClient.checkAnnouncementRead(announcementId);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['is_read'] ?? false;
+      } else {
+        return false;
+      }
     } catch (e) {
       return false;
     }
@@ -162,8 +170,11 @@ class AnnouncementRepository {
   // Đánh dấu thông báo đã đọc
   Future<void> markAnnouncementAsRead(int userId, int announcementId) async {
     try {
-      // Note: This would need a backend endpoint if needed
-      // For now, this is a placeholder
+      final response = await _apiClient.markAnnouncementAsRead(announcementId);
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to mark announcement as read');
+      }
     } catch (e) {
       rethrow;
     }
@@ -172,11 +183,11 @@ class AnnouncementRepository {
   // Lấy số thông báo chưa đọc
   Future<int> getUnreadAnnouncementCount(int userId) async {
     try {
-      final response = await _apiClient.getAnnouncements(activeOnly: true);
+      final response = await _apiClient.getUnreadAnnouncementCount();
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return (data as List).length;
+        return data['unread_count'] ?? 0;
       } else {
         return 0;
       }

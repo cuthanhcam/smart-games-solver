@@ -296,7 +296,10 @@ class _UserNotificationScreenState extends State<UserNotificationScreen> {
                                                       ),
                                                       const SizedBox(width: 4),
                                                       Text(
-                                                        announcement.createdBy,
+                                                        announcement.adminId !=
+                                                                null
+                                                            ? 'Admin #${announcement.adminId}'
+                                                            : 'Admin',
                                                         style: const TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 10,

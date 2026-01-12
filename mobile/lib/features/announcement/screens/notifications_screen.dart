@@ -105,36 +105,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       });
       print(
           'DEBUG: Loading completed. Announcements: ${_announcements.length}, Unread: $_unreadCount');
-
-      // Nếu không có thông báo nào, thêm thông báo mẫu để test
-      if (_announcements.isEmpty) {
-        print('DEBUG: No announcements found, adding sample data');
-        setState(() {
-          _announcements = [
-            Announcement(
-              id: 999,
-              title: 'Chào mừng đến với ứng dụng!',
-              content:
-                  'Đây là thông báo mẫu để kiểm tra giao diện. Bạn có thể xóa thông báo này.',
-              createdAt: DateTime.now().toIso8601String(),
-              createdBy: 'Admin',
-              isActive: true,
-            ),
-            Announcement(
-              id: 998,
-              title: 'Hướng dẫn sử dụng',
-              content:
-                  'Ứng dụng đã được cập nhật với nhiều tính năng mới. Hãy khám phá các chức năng trong menu.',
-              createdAt: DateTime.now()
-                  .subtract(const Duration(hours: 2))
-                  .toIso8601String(),
-              createdBy: 'Admin',
-              isActive: true,
-            ),
-          ];
-          _unreadCount = 2;
-        });
-      }
     } catch (e) {
       print('Error loading announcements: $e');
       setState(() => _isLoading = false);
@@ -443,7 +413,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              _buildDetailRow('Người tạo', announcement.createdBy ?? 'Admin'),
+              _buildDetailRow(
+                  'Người tạo',
+                  announcement.adminId != null
+                      ? 'Admin #${announcement.adminId}'
+                      : 'Admin'),
               _buildDetailRow(
                   'Ngày tạo', _formatDateTime(announcement.createdAt)),
               _buildDetailRow('Trạng thái', isRead ? 'Đã đọc' : 'Chưa đọc',
@@ -530,9 +504,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     if (dateTimeString == null || dateTimeString.isEmpty) return 'N/A';
 
     try {
-      final dateTime = DateTime.parse(dateTimeString);
+      // Parse UTC datetime and convert to Vietnam timezone (UTC+7)
+      final utcDateTime = DateTime.parse(dateTimeString);
+      final vietnamDateTime = utcDateTime.add(const Duration(hours: 7));
       final now = DateTime.now();
-      final difference = now.difference(dateTime);
+      final difference = now.difference(vietnamDateTime);
 
       if (difference.inDays > 0) {
         return '${difference.inDays} ngày trước';
@@ -773,8 +749,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                               const SizedBox(width: 2),
                                               Expanded(
                                                 child: Text(
-                                                  announcement.createdBy ??
-                                                      'Admin',
+                                                  announcement.adminId != null
+                                                      ? 'Admin #${announcement.adminId}'
+                                                      : 'Admin',
                                                   style: TextStyle(
                                                     color: Colors.white
                                                         .withOpacity(0.7),

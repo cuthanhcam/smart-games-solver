@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../shared/models/announcement.dart';
 import '../repositories/announcement_repository.dart';
 
@@ -63,6 +64,18 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
       }
     } catch (e) {
       print('Error marking as read: $e');
+    }
+  }
+
+  String _formatDateTime(String dateTimeStr) {
+    try {
+      // Parse UTC datetime and convert to Vietnam timezone (UTC+7)
+      final utcDateTime = DateTime.parse(dateTimeStr);
+      final vietnamDateTime = utcDateTime.add(const Duration(hours: 7));
+      // Format: dd/MM/yyyy HH:mm
+      return DateFormat('dd/MM/yyyy HH:mm').format(vietnamDateTime);
+    } catch (e) {
+      return dateTimeStr;
     }
   }
 
@@ -165,7 +178,9 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'User: ${widget.announcement.createdBy}',
+                              widget.announcement.adminId != null
+                                  ? 'Admin: #${widget.announcement.adminId}'
+                                  : 'Admin',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -228,7 +243,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'Ngày tạo: ${widget.announcement.createdAt}',
+                                'Ngày tạo: ${_formatDateTime(widget.announcement.createdAt)}',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,

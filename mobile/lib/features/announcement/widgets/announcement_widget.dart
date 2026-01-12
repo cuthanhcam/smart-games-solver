@@ -176,7 +176,9 @@ class _AnnouncementWidgetState extends State<AnnouncementWidget> {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                announcement.createdBy,
+                                announcement.adminId != null
+                                    ? 'Admin #${announcement.adminId}'
+                                    : 'Admin',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey.shade600,
@@ -309,7 +311,8 @@ class _AnnouncementWidgetState extends State<AnnouncementWidget> {
                     children: [
                       Icon(Icons.person, size: 16, color: Colors.grey.shade600),
                       const SizedBox(width: 8),
-                      Text('Tạo bởi: ${announcement.createdBy}'),
+                      Text(
+                          'Tạo bởi: ${announcement.adminId != null ? 'Admin #${announcement.adminId}' : 'Admin'}'),
                     ],
                   ),
                   const SizedBox(height: 4),

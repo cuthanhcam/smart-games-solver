@@ -10,34 +10,32 @@ class ApiClient {
   static const String _tokenKey = 'auth_token';
 
   late SharedPreferences _prefs;
+  bool _isInitialized = false;
 
   ApiClient() {
     _init();
   }
 
   Future<void> _init() async {
-    _prefs = await SharedPreferences.getInstance();
+    if (!_isInitialized) {
+      _prefs = await SharedPreferences.getInstance();
+      _isInitialized = true;
+    }
   }
 
   Future<String?> getToken() async {
-    await _ensureInitialized();
+    await _init(); // Đảm bảo khởi tạo trước khi dùng
     return _prefs.getString(_tokenKey);
   }
 
   Future<void> saveToken(String token) async {
-    await _ensureInitialized();
+    await _init(); // Đảm bảo khởi tạo trước khi dùng
     await _prefs.setString(_tokenKey, token);
   }
 
   Future<void> clearToken() async {
-    await _ensureInitialized();
+    await _init(); // Đảm bảo khởi tạo trước khi dùng
     await _prefs.remove(_tokenKey);
-  }
-
-  Future<void> _ensureInitialized() async {
-    if (_prefs.getString(_tokenKey) == null && _prefs.getKeys().isEmpty) {
-      _prefs = await SharedPreferences.getInstance();
-    }
   }
 
   Future<Map<String, String>> _getHeaders() async {
@@ -903,6 +901,70 @@ class ApiClient {
       final response = await http
           .post(
             Uri.parse('$_baseUrl/announcements/$announcementId/deactivate'),
+            headers: await _getHeaders(),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      return response;
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  // Mark announcement as read
+  Future<http.Response> markAnnouncementAsRead(int announcementId) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse('$_baseUrl/announcements/$announcementId/mark-read'),
+            headers: await _getHeaders(),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      return response;
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  // Check if announcement is read
+  Future<http.Response> checkAnnouncementRead(int announcementId) async {
+    try {
+      final response = await http
+          .get(
+            Uri.parse('$_baseUrl/announcements/$announcementId/is-read'),
+            headers: await _getHeaders(),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      return response;
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  // Hide announcement
+  Future<http.Response> hideAnnouncement(int announcementId) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse('$_baseUrl/announcements/$announcementId/hide'),
+            headers: await _getHeaders(),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      return response;
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  // Get unread announcement count
+  Future<http.Response> getUnreadAnnouncementCount() async {
+    try {
+      final response = await http
+          .get(
+            Uri.parse('$_baseUrl/announcements/unread-count'),
             headers: await _getHeaders(),
           )
           .timeout(const Duration(seconds: 30));
