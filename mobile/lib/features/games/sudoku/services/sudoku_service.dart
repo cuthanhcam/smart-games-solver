@@ -76,6 +76,7 @@ class SudokuService {
     required String difficulty,
     required int timeTaken,
     required bool completed,
+    int hintsUsed = 0,
   }) async {
     try {
       await ApiService.post(
@@ -83,8 +84,8 @@ class SudokuService {
         body: {
           'puzzle_id': puzzleId,
           'difficulty': difficulty,
-          'time_taken': timeTaken,
-          'completed': completed,
+          'time_seconds': timeTaken,
+          'hints_used': hintsUsed,
         },
         includeAuth: true,
       );

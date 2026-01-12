@@ -58,14 +58,22 @@ class CaroService {
 
   /// Save score (requires authentication)
   static Future<void> saveScore({
-    required String mode,
-    required String result,
     required int moves,
+    required int boardSize,
+    required String difficulty,
+    required String playerColor,
+    required String opponentType,
   }) async {
     try {
       await ApiService.post(
         ApiConfig.caroSaveScore,
-        body: {'mode': mode, 'result': result, 'moves': moves},
+        body: {
+          'moves': moves,
+          'board_size': boardSize,
+          'difficulty': difficulty,
+          'player_color': playerColor,
+          'opponent_type': opponentType,
+        },
         includeAuth: true,
       );
     } catch (e) {
