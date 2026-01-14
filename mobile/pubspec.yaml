@@ -38,11 +38,4 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/background.jpg
-    - assets/images/g2048_background.jpg
-    - assets/images/g2048_icon.jpg
-    - assets/images/icon.jpg
-    - assets/images/caro_icon.jpg
-    - assets/images/sudoku_icon.jpg
-    - assets/rubik_faces/
     - assets/caro/
